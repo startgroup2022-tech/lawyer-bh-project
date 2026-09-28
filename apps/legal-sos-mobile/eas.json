@@ -1,0 +1,86 @@
+{
+  "cli": {
+    "version": ">= 19.0.0",
+    "appVersionSource": "remote"
+  },
+
+  "build": {
+    "// development": "Internal dev client builds — install on a real iPhone/Android, then `npx expo start --dev-client` connects Metro for hot reload. Same workflow as the simulator but on real hardware.",
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "development",
+      "ios": {
+        "simulator": false,
+        "resourceClass": "m-medium",
+        "buildConfiguration": "Debug"
+      },
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://admin.legalsos.lawyer"
+      }
+    },
+
+    "// development-simulator": "Variant for iOS Simulator — useful when you don't have a physical device or want to test in a controlled environment. Otherwise identical to development.",
+    "development-simulator": {
+      "extends": "development",
+      "ios": {
+        "simulator": true,
+        "buildConfiguration": "Debug"
+      }
+    },
+
+    "// preview": "TestFlight internal track / Play Internal Testing. Release builds (optimised JS) signed for distribution. Send this to the seed lawyers + the operating attorney for sign-off before App Store submission.",
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview",
+      "ios": {
+        "resourceClass": "m-medium",
+        "buildConfiguration": "Release"
+      },
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://admin.legalsos.lawyer"
+      }
+    },
+
+    "// production": "App Store / Play Store submission builds. AAB for Android (Play requires App Bundles). Auto-increment build numbers via the remote version source.",
+    "production": {
+      "channel": "production",
+      "autoIncrement": true,
+      "ios": {
+        "resourceClass": "m-medium",
+        "buildConfiguration": "Release"
+      },
+      "android": {
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://admin.legalsos.lawyer"
+      }
+    }
+  },
+
+  "submit": {
+    "// production": "Auto-submission to TestFlight + Play Internal. Fill in appleId + ascAppId + sku after Apple enrollment; serviceAccountKeyPath after Play Console setup.",
+    "production": {
+      "ios": {
+        "appleId": "PLACEHOLDER_apple_id_email",
+        "ascAppId": "PLACEHOLDER_app_store_connect_app_id",
+        "appleTeamId": "PLACEHOLDER_apple_team_id_10_chars"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./secrets/play-service-account.json",
+        "track": "internal",
+        "releaseStatus": "draft"
+      }
+    }
+  }
+}

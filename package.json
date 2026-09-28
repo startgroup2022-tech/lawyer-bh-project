@@ -1,0 +1,25 @@
+{
+  "name": "azinove-sites",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.18.3",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "dev:lawyers": "pnpm --filter lawyers.bh dev",
+    "dev:lawyers:ksa": "pnpm --filter lawyers.ksa dev",
+    "dev:altujar": "pnpm --filter altujar.bh dev",
+    "dev:ejari": "pnpm --filter ejari.bh dev",
+    "dev:legal-sos": "pnpm --filter legal-sos-website dev",
+    "build:lawyers": "pnpm --filter lawyers.bh build",
+    "build:lawyers:ksa": "pnpm --filter lawyers.ksa build",
+    "build:altujar": "pnpm --filter altujar.bh build",
+    "build:ejari": "pnpm --filter ejari.bh build",
+    "build:legal-sos": "pnpm --filter legal-sos-website build"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.8"
+  }
+}

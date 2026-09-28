@@ -1,0 +1,11 @@
+/node_modules
+/.next
+/out
+/.env*.local
+/.env
+
+# OS / editor
+.DS_Store
+.idea
+.vscode/*
+!.vscode/settings.json

@@ -1,0 +1,9 @@
+# Provider agreement PDF languages
+
+The Lawyers.bh provider agreement editor will let an administrator select the languages included in each new structured agreement version. Arabic and English remain the default for existing versions. A new version can include either one, both, and manually authored additional languages. The saved version freezes language selection with its text and visual assets; historic signed snapshots are unaffected.
+
+The structured editor will expose language selection and one editable document for each additional language. Its content includes the title, legal text, party headings and details, identity label, signature labels, footer, and optional translations for selectable field choices. Existing Arabic and English structured fields continue to be edited in their current tabs. Each additional language has an ISO language code, display name, and text direction. No machine translation is implied. An administrator must enter the legal translation before saving or publishing. Attachment placeholders display human-readable file names rather than internal upload references.
+
+The parser rejects empty selection, duplicate or invalid language codes, missing required copy, unsafe control characters, and unknown placeholders. The PDF renderer uses the selected languages in order and includes only selected language text on the signature page. Preview and signed output use the same frozen template. The disclosure before signing must show the actual selected language content even if the website language differs. The font must support the characters supplied; unsupported glyphs produce a clear preview error rather than a corrupt PDF.
+
+The legacy renderer remains unchanged. Admins copy a legacy version into a structured draft before using language controls. Tests cover parsing, persistence through `parseTemplate`, PDF content and page selection, and disclosure.

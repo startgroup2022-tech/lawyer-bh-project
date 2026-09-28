@@ -1,0 +1,57 @@
+{
+  "site": {
+    "langSwitch": "العربية"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "contact": "Contact"
+  },
+  "cta": {
+    "start": "Start Your Company",
+    "learn": "Learn More",
+    "whatsapp": "Chat on WhatsApp"
+  },
+  "hero": {
+    "badge": "Bahrain Company Creation",
+    "title": "Launch Your Business in the Kingdom of Bahrain",
+    "subtitle": "End-to-end commercial registration, office address, notary and setup support — handled by a licensed team, delivered in days not weeks."
+  },
+  "services": {
+    "label": "What We Do",
+    "title": "Company setup, fully managed",
+    "subtitle": "From reserving your commercial name to receiving your CR — we handle the process.",
+    "cr": {
+      "title": "Commercial Registration",
+      "desc": "Name reservation, SIJILAT filing, activity selection and CR issuance."
+    },
+    "office": {
+      "title": "Office Address & Lease",
+      "desc": "Physical or virtual registered address that satisfies MoICT requirements."
+    },
+    "legal": {
+      "title": "Legal Drafting",
+      "desc": "Memorandum of association, partner agreements and power of attorney."
+    },
+    "growth": {
+      "title": "Post-Setup Support",
+      "desc": "Banking, LMRA, tax registration and ongoing compliance."
+    },
+    "notary": {
+      "title": "Notary Services",
+      "desc": "Signing, authentication and certified document services."
+    },
+    "banking": {
+      "title": "Banking & Accounts",
+      "desc": "Corporate bank account opening and payment processing setup."
+    }
+  },
+  "contact": {
+    "title": "Ready when you are.",
+    "subtitle": "Tell us about your business idea and we'll come back with a timeline and a quote."
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "madeBy": "Made by"
+  }
+}

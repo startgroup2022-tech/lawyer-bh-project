@@ -1,0 +1,41 @@
+import fs from 'node:fs/promises';
+import {randomUUID} from 'node:crypto';
+import postgres from 'postgres';
+import {afterAll,beforeAll,beforeEach,describe,expect,it} from 'vitest';
+import {createNotificationPreferencesStore} from './store';
+const url=process.env.CLIENT_AUTH_TEST_DATABASE_URL;
+describe.skipIf(!url)('device notification preferences in isolated PostgreSQL',()=>{
+  const connection=new URL(url??'postgres://localhost/client_auth_test');
+  if(connection.hostname!=='localhost'||connection.pathname!=='/client_auth_test')throw Error('Local test database only');
+  const socket=connection.searchParams.get('host');connection.searchParams.delete('host');
+  if(socket&&!socket.startsWith('/private/tmp/country-migration.'))throw Error('Unexpected socket');
+  const schema=`preferences_test_${randomUUID().replaceAll('-','')}`;
+  const sql=postgres(connection.toString(),{host:socket??'localhost',connection:{search_path:schema},onnotice:()=>{}});
+  const store=createNotificationPreferencesStore(sql);
+  const defaults={enabled:true,requests:true,communications:true,advertising:true};
+  beforeAll(async()=>{await sql.unsafe(`CREATE SCHEMA ${schema}`);await sql.unsafe(await fs.readFile('drizzle/0050_mobile_notification_preferences.sql','utf8'));});
+  beforeEach(async()=>{await sql`TRUNCATE mobile_notification_device_preferences CASCADE`;});
+  afterAll(async()=>{try{await sql.unsafe(`DROP SCHEMA IF EXISTS ${schema} CASCADE`);}finally{await sql.end();}});
+  it('keeps category choices when master changes and follows token rotation',async()=>{
+    expect(await store.get('device-a')).toEqual(defaults);
+    await store.save('device-a',{preferences:{...defaults,requests:false},token:'token-old'});
+    await store.save('device-a',{preferences:null,token:'token-new'});
+    expect(await store.filterTokens(['token-old','token-new','legacy'],'requests')).toEqual(['legacy']);
+    expect(await store.filterTokens(['token-new'],'communications')).toEqual(['token-new']);
+    await store.save('device-a',{preferences:{...defaults,enabled:false,requests:false},token:null});
+    expect(await store.filterTokens(['token-new'],'communications')).toEqual([]);
+    expect((await store.get('device-a')).requests).toBe(false);
+    await store.save('device-a',{preferences:{...defaults,requests:false},token:null});
+    expect(await store.filterTokens(['token-new'],'advertising')).toEqual(['token-new']);
+  });
+  it('isolates devices and refuses token reassignment atomically',async()=>{
+    await store.save('device-a',{preferences:{...defaults,advertising:false},token:'token-a'});
+    await store.save('device-b',{preferences:defaults,token:'token-b'});
+    await expect(store.save('device-b',{preferences:{...defaults,enabled:false},token:'token-a'})).rejects.toMatchObject({code:'device_conflict'});
+    expect(await store.get('device-b')).toEqual(defaults);
+    expect(await store.filterTokens(['token-a','token-b'],'advertising')).toEqual(['token-b']);
+    expect(await store.filterTokens(['token-a','token-b'],'requests')).toEqual(['token-a','token-b']);
+    const serialized=JSON.stringify(await sql`SELECT * FROM mobile_notification_token_bindings`);
+    expect(serialized).not.toContain('token-a');
+  });
+});

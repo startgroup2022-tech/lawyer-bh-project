@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1779835899832,
+      "tag": "0000_thankful_lethal_legion",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779841491847,
+      "tag": "0001_extend_schema_auth_payments",
+      "breakpoints": true
+    }
+  ]
+}

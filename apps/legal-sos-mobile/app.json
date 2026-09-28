@@ -1,0 +1,85 @@
+{
+  "expo": {
+    "name": "Legal SOS",
+    "slug": "legal-sos-mobile",
+    "version": "1.0.0",
+    "scheme": "legalsos",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "owner": "PLACEHOLDER_expo_account_username",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/PLACEHOLDER_eas_project_id",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+    "extra": {
+      "apiUrl": "",
+      "eas": {
+        "projectId": "PLACEHOLDER_eas_project_id"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Legal SOS uses your location to dispatch the nearest lawyer to your scene."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.1"
+          },
+          "android": {
+            "minSdkVersion": 24
+          }
+        }
+      ],
+      "expo-localization"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "bh.lawyers.legalsos",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Legal SOS needs microphone access for the 15-minute consultation call with your lawyer.",
+        "NSCameraUsageDescription": "Legal SOS needs camera access if you choose to enable video on a consultation call.",
+        "NSLocationWhenInUseUsageDescription": "Legal SOS uses your location to dispatch the nearest lawyer to your scene.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "bh.lawyers.legalsos",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#0B1426",
+        "foregroundImage": "./assets/android-icon-foreground.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.INTERNET",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_CONNECT"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    }
+  }
+}

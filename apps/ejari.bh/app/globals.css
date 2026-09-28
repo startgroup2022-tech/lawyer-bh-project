@@ -1,0 +1,512 @@
+@import "tailwindcss";
+
+/* =========================================================
+   EJARI DESIGN SYSTEM
+   ========================================================= */
+
+:root {
+  /* =======================================================
+     BRAND COLORS
+     ======================================================= */
+
+  --primary: #03C39A;
+  --primary-dark: #029A7A;
+  --primary-light: #2BD6AF;
+
+  /* =======================================================
+     TEXT
+     ======================================================= */
+
+  --text-primary: #1F2937;
+  --text-secondary: #4C5D77;
+  --text-muted: #6B7280;
+
+  /* =======================================================
+     BACKGROUNDS
+     ======================================================= */
+
+  --bg-white: #FFFFFF;
+  --bg-light: #F4F7FA;
+  --bg-dark: #1A2A3F;
+
+  /* =======================================================
+     BORDERS
+     ======================================================= */
+
+  --border-color: #EAEAEC;
+
+  /* =======================================================
+     PRIMARY TINTS
+     ======================================================= */
+
+  --primary-5: rgba(3, 195, 154, 0.05);
+  --primary-8: rgba(3, 195, 154, 0.08);
+  --primary-10: rgba(3, 195, 154, 0.10);
+  --primary-15: rgba(3, 195, 154, 0.15);
+  --primary-20: rgba(3, 195, 154, 0.20);
+  --primary-30: rgba(3, 195, 154, 0.30);
+}
+
+/* =========================================================
+   TAILWIND THEME
+   ========================================================= */
+
+@theme inline {
+  --color-primary: #03C39A;
+  --color-primary-dark: #029A7A;
+  --color-primary-light: #2BD6AF;
+
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #4C5D77;
+  --color-text-muted: #6B7280;
+
+  --color-bg-white: #FFFFFF;
+  --color-bg-light: #F4F7FA;
+  --color-bg-dark: #1A2A3F;
+
+  --color-border: #EAEAEC;
+}
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Cairo", "Inter", Arial, sans-serif;
+  background: var(--bg-white);
+  color: var(--text-primary);
+
+  overflow-x: hidden;
+  max-width: 100vw;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================================
+   BOX SIZING
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   INTERACTION
+   ========================================================= */
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* =========================================================
+   TEXT SELECTION
+   ========================================================= */
+
+::selection {
+  background: rgba(3, 195, 154, 0.18);
+  color: var(--text-primary);
+}
+
+/* =========================================================
+   EJARI CONTAINER
+   ========================================================= */
+
+.ejari-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+/* =========================================================
+   EJARI SECTIONS
+   ========================================================= */
+
+.ejari-section {
+  width: 100%;
+  padding-block: 80px;
+}
+
+.ejari-section-title {
+  color: var(--text-primary);
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.ejari-section-subtitle {
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.ejari-section-line {
+  width: 42px;
+  height: 3px;
+  margin: 12px auto 0;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+/* =========================================================
+   MOBILE WEBVIEW
+   ========================================================= */
+
+html[data-in-app="1"] .hide-in-app {
+  display: none !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 767px) {
+  .ejari-container {
+    padding-inline: 16px;
+  }
+
+  .ejari-section {
+    padding-block: 56px;
+  }
+}
+
+/* =========================================================
+   HOW IT WORKS
+   ========================================================= */
+
+@keyframes stepReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(25px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes timelineProgress {
+  0% {
+    transform: scaleX(0);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* =========================================================
+   EJARI GENERAL ANIMATIONS
+   ========================================================= */
+
+@keyframes ejari-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ejari-fade-right {
+  from {
+    opacity: 0;
+    transform: translateX(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ejari-fade-left {
+  from {
+    opacity: 0;
+    transform: translateX(-35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ejari-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ejari-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes ejari-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.65;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes ejari-line {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* =========================================================
+   ANIMATION UTILITIES
+   ========================================================= */
+
+.ejari-fade-up {
+  animation: ejari-fade-up 0.7s ease-out both;
+}
+
+.ejari-fade-right {
+  animation: ejari-fade-right 0.7s ease-out both;
+}
+
+.ejari-fade-left {
+  animation: ejari-fade-left 0.7s ease-out both;
+}
+
+.ejari-scale-in {
+  animation: ejari-scale-in 0.6s ease-out both;
+}
+
+.ejari-float {
+  animation: ejari-float 4s ease-in-out infinite;
+}
+
+.ejari-pulse {
+  animation: ejari-pulse 4s ease-in-out infinite;
+}
+
+.ejari-line {
+  transform-origin: center;
+  animation: ejari-line 1s ease-out both;
+}
+
+/* =========================================================
+   STAGGER ANIMATIONS
+   ========================================================= */
+
+.ejari-delay-1 {
+  animation-delay: 100ms;
+}
+
+.ejari-delay-2 {
+  animation-delay: 200ms;
+}
+
+.ejari-delay-3 {
+  animation-delay: 300ms;
+}
+
+.ejari-delay-4 {
+  animation-delay: 400ms;
+}
+
+.ejari-delay-5 {
+  animation-delay: 500ms;
+}
+
+.ejari-delay-6 {
+  animation-delay: 600ms;
+}
+
+/* =========================================================
+   APP DOWNLOAD
+   ========================================================= */
+
+@keyframes ejariFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+}
+
+@keyframes ejariBackFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(8deg);
+  }
+
+  50% {
+    transform: translateY(-7px) rotate(9deg);
+  }
+}
+
+@keyframes ejariGlow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes ejariGridMove {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+
+  100% {
+    background-position: 32px 32px, 32px 32px;
+  }
+}
+
+@keyframes ejariFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ejariBadge {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ejariPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.ejari-app-phone {
+  animation: ejariFloat 5s ease-in-out infinite;
+}
+
+.ejari-app-back-phone {
+  animation: ejariBackFloat 6s ease-in-out infinite;
+}
+
+.ejari-app-glow {
+  animation: ejariGlow 5s ease-in-out infinite;
+}
+
+.ejari-app-grid {
+  animation: ejariGridMove 12s linear infinite;
+}
+
+.ejari-app-content {
+  animation: ejariFadeUp 0.8s ease-out both;
+}
+
+.ejari-app-badge {
+  animation: ejariBadge 0.7s ease-out both;
+}
+
+.ejari-app-check {
+  animation: ejariPulse 3s ease-in-out infinite;
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .ejari-fade-up,
+  .ejari-fade-right,
+  .ejari-fade-left,
+  .ejari-scale-in,
+  .ejari-float,
+  .ejari-pulse,
+  .ejari-line,
+  .ejari-app-phone,
+  .ejari-app-back-phone,
+  .ejari-app-glow,
+  .ejari-app-grid,
+  .ejari-app-content,
+  .ejari-app-badge,
+  .ejari-app-check {
+    animation: none !important;
+  }
+}

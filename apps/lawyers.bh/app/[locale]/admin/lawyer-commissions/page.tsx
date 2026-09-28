@@ -1,0 +1,2 @@
+import{redirect}from"next/navigation";import{setRequestLocale}from"next-intl/server";import{requireAdminPermission}from"@/lib/auth/admin-access";import CommissionsContent from"./CommissionsContent";
+export default async function Page({params}:{params:Promise<{locale:string}>}){const{locale}=await params;if(!(await requireAdminPermission("manage_terms_commissions")))redirect(`/${locale}/admin`);setRequestLocale(locale);return <CommissionsContent isAr={locale==="ar"}/>}

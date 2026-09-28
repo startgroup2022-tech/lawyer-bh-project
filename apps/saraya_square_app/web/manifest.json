@@ -1,0 +1,35 @@
+{
+    "name": "Saraya Square | سرايا سكوير",
+    "short_name": "Saraya Square",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#F6F7F3",
+    "theme_color": "#0D483C",
+    "description": "Offices, shops, virtual business addresses, and meeting rooms in Bahrain.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

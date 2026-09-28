@@ -1,0 +1,1 @@
+ALTER TABLE "bahrain_lawyers" ADD COLUMN "working_hours" text DEFAULT '09:00-13:00' NOT NULL;

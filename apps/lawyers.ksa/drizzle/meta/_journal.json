@@ -1,0 +1,202 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1778232783118,
+      "tag": "0000_productive_blob",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778271054713,
+      "tag": "0001_exotic_carnage",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778272310358,
+      "tag": "0002_steady_alex_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778275907923,
+      "tag": "0003_clammy_sunspot",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1778315563093,
+      "tag": "0004_ordinary_inertia",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1778354801148,
+      "tag": "0005_soft_black_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1778485426007,
+      "tag": "0006_hot_cable",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1778487107198,
+      "tag": "0007_misty_whistler",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1779563234733,
+      "tag": "0008_charming_squadron_sinister",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1781700487476,
+      "tag": "0009_military_george_stacy",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1781762017946,
+      "tag": "0010_cooing_kronos",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1781840155990,
+      "tag": "0011_kind_psynapse",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1782129521807,
+      "tag": "0012_broad_gunslinger",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1782137756332,
+      "tag": "0013_eager_killer_shrike",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1782833333025,
+      "tag": "0014_fast_rogue",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1783100000000,
+      "tag": "0015_legal_cases",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1783942823005,
+      "tag": "0023_emergency_case_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1784621983000,
+      "tag": "0024_consultation_methods_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1784807703000,
+      "tag": "0025_yourgpt_service_routing_and_whatsapp",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1784821172000,
+      "tag": "0026_yourgpt_legal_case_guidance",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1785606973000,
+      "tag": "0027_tap_marketplace_onboarding",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1785711000000,
+      "tag": "0028_mobile_tap_payment_sessions",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1786272000000,
+      "tag": "0029_discount_codes",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1786363200000,
+      "tag": "0030_admin_permissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1786366800000,
+      "tag": "0031_admin_profile_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1786366900000,
+      "tag": "0032_bahrain_lawyers_missing_profile_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1786367000000,
+      "tag": "0033_backfill_platform_only_allocations",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1790272846000,
+      "tag": "0034_ksa_financial_isolation",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "NODE_ENV",
+
+        "DATABASE_URL",
+        "DATABASE_URL_UNPOOLED",
+        "POSTGRES_URL_NON_POOLING",
+        "POSTGRES_URL",
+        "POSTGRES_URL",
+        "POSTGRES_URL_NON_POOLING",
+        "POSTGRES_PRISMA_URL",
+        "POSTGRES_URL_NO_SSL",
+        "POSTGRES_USER",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_HOST",
+        "POSTGRES_DATABASE",
+        "PGHOST",
+        "PGHOST_UNPOOLED",
+        "PGUSER",
+        "PGPASSWORD",
+        "PGDATABASE",
+
+        "NEXT_PUBLIC_SITE_URL",
+
+        "BLOB_READ_WRITE_TOKEN",
+        "BLOB_STORE_ID",
+        "BLOB_WEBHOOK_PUBLIC_KEY",
+
+        "LAWYER_AUTH_SECRET",
+        "ADMIN_AUTH_SECRET",
+        "CLIENT_AUTH_SECRET",
+        "COMMUNICATION_SOCKET_SECRET",
+        "SARAYA_ACCESS_TOKEN_SECRET",
+        "SARAYA_APP_URL",
+        "SARAYA_INVITATION_FROM",
+        "SARAYA_TRUST_PROXY_HEADERS",
+
+        "ADMIN_EMAIL",
+        "ADMIN_PASSWORD",
+        "ADMIN_NAME",
+        "ADMIN_ROLE",
+
+        "VITE_NEON_AUTH_URL",
+        "NEON_PROJECT_ID",
+        "NEON_AUTH_BASE_URL",
+
+        "DISPATCH_USERS",
+        "DISPATCH_USERNAME",
+        "DISPATCH_PASSWORD",
+        "SOS_DISPATCH_PHONE",
+        "SOS_DISPATCH_EMAIL",
+        "SOS_ADVOCATE_CUT_PERCENT",
+
+        "NEXT_PUBLIC_VAPID_PUBLIC_KEY",
+        "VAPID_PRIVATE_KEY",
+        "VAPID_SUBJECT",
+
+        "CRON_SECRET",
+        "LEGALSOS_DELETION_WORKFLOW_READY",
+
+        "FIREBASE_PROJECT_ID",
+        "FIREBASE_CLIENT_EMAIL",
+        "FIREBASE_PRIVATE_KEY",
+
+        "POSTMARK_TOKEN",
+        "POSTMARK_FROM",
+        "POSTMARK_SERVER_TOKEN",
+        "POSTMARK_API_TOKEN",
+        "POSTMARK_FROM_EMAIL",
+        "POSTMARK_TO_EMAIL",
+        "POSTMARK_MESSAGE_STREAM",
+
+        "TAP_PUBLIC_KEY",
+        "TAP_SECRET_KEY",
+        "TAP_MERCHANT_ID",
+        "TAP_MARKETPLACE_MID",
+
+        "TAP_MOBILE_TEST_SECRET_KEY",
+        "TAP_MOBILE_TEST_PUBLIC_KEY",
+        "TAP_MOBILE_TEST_MERCHANT_ID",
+        "TAP_MOBILE_POST_URL",
+
+        "NEXT_PUBLIC_TAP_PUBLIC_KEY",
+        "NEXT_PUBLIC_TAP_MERCHANT_ID",
+        "NEXT_PUBLIC_TAP_APPLE_PAY_DOMAIN",
+        "NEXT_PUBLIC_TAP_APPLE_PAY_ENV",
+
+        "YOURGPT_BOOKING_SECRET",
+        "NEXT_PUBLIC_ENABLE_YOURGPT",
+        "NEXT_PUBLIC_YOURGPT_WIDGET_ID",
+        "NEXT_PUBLIC_YOURGPT_WIDGET_ID_AR",
+        "NEXT_PUBLIC_YOURGPT_WIDGET_ID_EN",
+
+        "META_WHATSAPP_VERIFY_TOKEN",
+        "META_WHATSAPP_APP_SECRET",
+        "META_WHATSAPP_ACCESS_TOKEN",
+        "META_WHATSAPP_PHONE_NUMBER_ID",
+        "META_WHATSAPP_GRAPH_VERSION",
+        "OPENAI_API_KEY",
+        "OPENAI_WHATSAPP_MODEL",
+
+        "CLOUDFLARE_TURN_KEY_ID",
+        "CLOUDFLARE_TURN_KEY_API_TOKEN",
+
+        "APNS_KEY_ID",
+        "APPLE_TEAM_ID",
+        "APNS_PRIVATE_KEY",
+        "IOS_BUNDLE_ID",
+        "APNS_ENVIRONMENT"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "start": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {}
+  }
+}

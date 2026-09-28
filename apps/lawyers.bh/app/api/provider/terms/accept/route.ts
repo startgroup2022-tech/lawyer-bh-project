@@ -1,0 +1,5 @@
+import {NextResponse} from "next/server";
+import type {NextRequest} from "next/server";
+import {getProviderSessionFromRequest} from "../../_session";
+import {acceptRequiredLawyerTerms} from "@/lib/terms-management/acceptance";
+export async function POST(request:NextRequest){const session=getProviderSessionFromRequest(request);if(!session)return NextResponse.json({ok:false,error:"Unauthorized"},{status:401});try{const body=await request.json();if(typeof body.versionId!=="string"||!body.versionId)return NextResponse.json({ok:false,error:"terms_version_required"},{status:400});await acceptRequiredLawyerTerms(session.providerId,body.versionId,{ip:request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()??null,userAgent:request.headers.get("user-agent")});return NextResponse.json({ok:true})}catch(error){const code=error instanceof Error?error.message:"internal_error";return NextResponse.json({ok:false,error:code==="terms_version_stale"?code:"internal_error"},{status:code==="terms_version_stale"?409:500})}}

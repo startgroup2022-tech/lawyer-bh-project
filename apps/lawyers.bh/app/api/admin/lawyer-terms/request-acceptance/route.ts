@@ -1,0 +1,4 @@
+import {NextResponse} from "next/server";
+import {requireAdminPermission} from "@/lib/auth/admin-access";
+import {requestExistingLawyerAcceptance} from "@/lib/terms-management/acceptance";
+export async function POST(request:Request){const admin=await requireAdminPermission("manage_terms_commissions");if(!admin)return NextResponse.json({ok:false,error:"Forbidden"},{status:403});try{const body=await request.json();if(body.confirmation!=="REQUEST_ACCEPTANCE"||typeof body.versionId!=="string"||!body.versionId)return NextResponse.json({ok:false,error:"confirmation_required"},{status:400});return NextResponse.json({ok:true,...await requestExistingLawyerAcceptance(body.versionId,{adminId:admin.id})})}catch(error){console.error("[lawyer-terms-campaign]",error);return NextResponse.json({ok:false,error:"internal_error"},{status:500})}}

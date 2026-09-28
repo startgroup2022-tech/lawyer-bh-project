@@ -1,0 +1,13 @@
+packages:
+  - "apps/*"
+  - "!apps/legal-sos-mobile"
+  - "!apps/legal-sos-landing"
+  - "!apps/legal-sos-admin"
+  - "packages/*"
+allowBuilds:
+  esbuild: set this to true or false
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver

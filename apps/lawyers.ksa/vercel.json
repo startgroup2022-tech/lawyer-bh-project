@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/sos/dispatch/payouts/auto-settle?olderThanDays=14",
+      "schedule": "0 3 * * *"
+    }
+  ]
+}

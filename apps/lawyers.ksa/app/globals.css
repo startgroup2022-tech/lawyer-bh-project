@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #006C32;
+  --primary-dark: #005126;
+  --primary-light: #E6F2EC;
+  --text-primary: #020404;
+  --text-secondary: #3f4245;
+  --text-muted: #5c544d;
+  --bg-white: #ffffff;
+  --bg-light: #F7F7F7;
+  --bg-dark: #0F1923;
+  --bg-dark-lighter: #1a2a3a;
+  --border-color: #eaeaec;
+  --gold: #C5A572;
+}
+
+@theme inline {
+  --color-primary: #006C32;
+  --color-primary-dark: #005126;
+  --color-primary-light: #E6F2EC;
+  --color-bg-light: #F7F7F7;
+  --color-bg-dark: #0F1923;
+  --color-bg-dark-lighter: #1a2a3a;
+  --color-gold: #C5A572;
+  --color-border: #eaeaec;
+  --color-text-primary: #020404;
+  --color-text-secondary: #3f4245;
+  --color-text-muted: #5c544d;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Tajawal', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: var(--bg-white);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Prevent RTL horizontal overflow */
+html[dir="rtl"] .embla__container {
+  direction: rtl;
+}
+
+html[dir="rtl"] section,
+html[dir="rtl"] main {
+  overflow-x: hidden;
+}
+
+/* RTL support */
+[dir="rtl"] body {
+  text-align: right;
+}
+
+/* Carousel */
+.embla {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.embla__container {
+  display: flex;
+  height: 100%;
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  position: relative;
+}
+
+/* WhatsApp pulse */
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.animate-pulse-ring {
+  animation: pulseRing 2s ease-out infinite;
+}
+
+/* In-app mobile WebView: hide chrome so the site looks like a native app */
+html[data-in-app="1"] .hide-in-app {
+  display: none !important;
+}
+
+/* Respect iOS safe area (home indicator) at the bottom of the WebView. Top
+   safe-area is handled per-component (InAppBackBar for inner pages,
+   InAppHome's brand header for the home page) so the gradient/back-bar can
+   extend behind the status bar instead of leaving a white strip on top. */
+html[data-in-app="1"] body {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Apply iOS top safe-area as padding so headers sit below the status bar /
+   Dynamic Island while their backgrounds extend to the very top edge. */
+html[data-in-app="1"] .in-app-safe-top {
+  padding-top: max(env(safe-area-inset-top, 0px), 0px);
+}
+
+/* Tighten the services section so it fills the in-app viewport */
+html[data-in-app="1"] #services {
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem;
+}
+
+#yourgpt_root {
+  z-index: 2147483647 !important;
+}
+
+/* Default: English / LTR = Left */
+#yourgpt_root .ygpts-widgetBtnOuter {
+  position: fixed !important;
+  right: 18px !important;
+  left: auto !important;
+  bottom: 75px !important;
+  top: auto !important;
+}
+
+#yourgpt_root .ygpts-welcomePopup {
+  position: fixed !important;
+  right: 18px !important;
+  left: auto !important;
+  bottom: 175px !important;
+  top: auto !important;
+}
+
+#yourgpt_root .ygpts-frame {
+  position: fixed !important;
+  right: 18px !important;
+  left: auto !important;
+  bottom: 170px !important;
+  top: auto !important;
+  transform-origin: left bottom !important;
+}
+
+/* Arabic / RTL = Right */
+html[dir="rtl"] #yourgpt_root .ygpts-widgetBtnOuter {
+  right: auto !important;
+  left: 18px !important;
+}
+
+html[dir="rtl"] #yourgpt_root .ygpts-welcomePopup {
+  right: auto !important;
+  left: 18px !important;
+}
+
+html[dir="rtl"] #yourgpt_root .ygpts-frame {
+  right: auto !important;
+  left: 18px !important;
+  transform-origin: right bottom !important;
+}
+
+html[dir="rtl"] #yourgpt_root .btcMQR {
+  right: auto !important;
+  left: 24px !important;
+}
+
+/* Default / English: show English only */
+html[dir="ltr"] #yourgpt_root .ygpts-welcomePopup .sc-deRCuU > .sc-nTuQx:nth-of-type(1) {
+  display: none !important;
+}
+
+html[dir="ltr"] #yourgpt_root .ygpts-welcomePopup .sc-deRCuU > .sc-nTuQx:nth-of-type(2) {
+  display: block !important;
+}
+
+/* Arabic: show Arabic only */
+html[dir="rtl"] #yourgpt_root .ygpts-welcomePopup .sc-deRCuU > .sc-nTuQx:nth-of-type(1) {
+  display: block !important;
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+html[dir="rtl"] #yourgpt_root .ygpts-welcomePopup .sc-deRCuU > .sc-nTuQx:nth-of-type(2) {
+  display: none !important;
+}
+
+.quick-action-red-pulse {
+  animation: quickActionRedPulse 1.15s ease-in-out infinite;
+}
+
+@keyframes quickActionRedPulse {
+  0%,
+  100% {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+  }
+
+  50% {
+    background-color: #dc2626;
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow:
+      0 0 0 1px rgba(220, 38, 38, 0.45),
+      0 0 18px rgba(220, 38, 38, 0.75),
+      0 0 32px rgba(220, 38, 38, 0.45);
+  }
+}
+
+
+iframe[src*="yourgpt"],
+[id*="yourgpt"],
+[class*="yourgpt"] {
+  z-index: 999999 !important;
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1086 1144" role="img" aria-labelledby="title desc">
+  <title id="title">BenefitPay logo</title>
+  <desc id="desc">Vectorized BenefitPay mark with transparent background and diagonal gradient.</desc>
+  <defs>
+    <linearGradient id="benefitpayGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9F2F7F"/>
+      <stop offset="20%" stop-color="#AC2D71"/>
+      <stop offset="36%" stop-color="#C82753"/>
+      <stop offset="50%" stop-color="#EA2331"/>
+      <stop offset="62%" stop-color="#EC3639"/>
+      <stop offset="76%" stop-color="#F05E4C"/>
+      <stop offset="90%" stop-color="#F69867"/>
+      <stop offset="100%" stop-color="#F8AF72"/>
+    </linearGradient>
+  </defs>
+  <path d="M 976 610 L 967 596 L 965 595 L 780 705 L 787 727 L 788 761 L 783 790 L 772 823 L 757 852 L 741 874 L 715 900 L 686 920 L 663 931 L 643 938 L 613 945 L 591 948 L 371 949 L 47 1143 L 545 1143 L 581 1141 L 641 1133 L 695 1120 L 747 1101 L 796 1076 L 828 1055 L 850 1038 L 866 1024 L 904 985 L 925 959 L 948 925 L 966 892 L 979 862 L 993 818 L 1001 777 L 1004 749 L 1004 705 L 1001 680 L 994 651 L 987 632 Z M 981 67 L 966 55 L 944 41 L 907 24 L 863 11 L 837 6 L 804 2 L 765 0 L 261 1 L 42 1036 L 44 1036 L 288 890 L 338 653 L 341 646 L 625 646 L 664 649 L 687 653 L 931 508 L 945 497 L 967 475 L 989 448 L 1005 424 L 1029 376 L 1045 327 L 1053 287 L 1056 259 L 1056 226 L 1054 206 L 1050 184 L 1042 157 L 1035 140 L 1018 109 L 1002 88 Z M 380 456 L 435 195 L 437 193 L 695 193 L 735 196 L 766 201 L 789 208 L 810 220 L 820 230 L 827 241 L 833 262 L 833 294 L 827 325 L 814 361 L 801 383 L 782 405 L 765 419 L 737 435 L 719 442 L 689 450 L 664 454 L 629 457 Z" fill="url(#benefitpayGradient)" fill-rule="evenodd" clip-rule="evenodd"/>
+</svg>

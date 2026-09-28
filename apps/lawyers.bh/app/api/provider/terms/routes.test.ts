@@ -1,0 +1,10 @@
+import {beforeEach,describe,expect,it,vi} from "vitest";
+const state=vi.hoisted(()=>({session:null as null|{providerId:string;countryCode:string}}));
+const requirement=vi.hoisted(()=>vi.fn(async()=>({lawyerId:"l",versionId:"v2"})));
+const accept=vi.hoisted(()=>vi.fn(async()=>undefined));
+vi.mock("server-only",()=>({}));
+vi.mock("../_session",()=>({getProviderSessionFromRequest:()=>state.session}));
+vi.mock("@/lib/terms-management/acceptance",()=>({getLawyerTermsRequirement:requirement,acceptRequiredLawyerTerms:accept}));
+vi.mock("@/lib/terms-management/service",()=>({listTermsVersions:vi.fn(async()=>[{id:"v2",contentAr:"عربي",contentEn:"English",version:2,status:"published"}])}));
+import {GET} from "./route";import {POST} from "./accept/route";
+describe("provider required terms",()=>{beforeEach(()=>{state.session=null;vi.clearAllMocks()});it("requires provider authentication",async()=>{expect((await GET(new Request("http://x") as never)).status).toBe(401)});it("returns the exact required version and accepts it",async()=>{state.session={providerId:"l",countryCode:"BH"};const read=await GET(new Request("http://x") as never);expect((await read.json()).terms.id).toBe("v2");const response=await POST(new Request("http://x",{method:"POST",body:JSON.stringify({versionId:"v2"})}) as never);expect(response.status).toBe(200);expect(accept).toHaveBeenCalledWith("l","v2",expect.any(Object))})});

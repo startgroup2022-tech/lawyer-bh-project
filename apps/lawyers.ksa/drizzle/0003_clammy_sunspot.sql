@@ -1,0 +1,1 @@
+ALTER TABLE "emergency_requests" ADD COLUMN "dispatch_actor_log" json DEFAULT '[]'::json;

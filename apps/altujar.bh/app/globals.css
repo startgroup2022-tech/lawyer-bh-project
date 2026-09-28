@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #206DBD;
+  --primary-dark: #1A5898;
+  --primary-light: #3B8FD8;
+  --accent: #8988CD;
+  --accent-dark: #6C6BBB;
+  --text-primary: #020404;
+  --text-secondary: #3F4245;
+  --text-muted: #6B7280;
+  --bg-white: #ffffff;
+  --bg-light: #F7F7F7;
+  --bg-dark: #0F1B2D;
+  --border-color: #E5E7EB;
+}
+
+@theme inline {
+  --color-primary: #206DBD;
+  --color-primary-dark: #1A5898;
+  --color-primary-light: #3B8FD8;
+  --color-accent: #8988CD;
+  --color-accent-dark: #6C6BBB;
+  --color-bg-light: #F7F7F7;
+  --color-bg-dark: #0F1B2D;
+  --color-border: #E5E7EB;
+  --color-text-primary: #020404;
+  --color-text-secondary: #3F4245;
+  --color-text-muted: #6B7280;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Cairo', 'Inter', sans-serif;
+  background: var(--bg-white);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* In-app mobile WebView: hide chrome so the site looks like a native app */
+html[data-in-app="1"] .hide-in-app {
+  display: none !important;
+}
+

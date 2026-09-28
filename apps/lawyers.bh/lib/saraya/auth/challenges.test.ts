@@ -1,0 +1,6 @@
+import { describe, expect, it } from "vitest";
+import { createRecoveryService } from "./challenges";
+describe("password recovery privacy", () => {
+  it("returns the same accepted result for unknown identity and delivery failure", async () => { const base = { save: async () => undefined, delivery: { send: async () => { throw new Error("offline"); } }, generateToken: () => "secret", now: () => new Date(0) }; const unknown = createRecoveryService({ ...base, findUser: async () => null }); const known = createRecoveryService({ ...base, findUser: async () => ({ id: "u1", normalizedEmail: "a@b.com", normalizedPhone: null }) }); await expect(unknown.request("missing@b.com")).resolves.toEqual({ accepted: true }); await expect(known.request("a@b.com")).resolves.toEqual({ accepted: true }); });
+  it("persists queued and failed delivery states for retry", async () => { const states: string[] = []; const service = createRecoveryService({ findUser: async () => ({ id: "u1", normalizedEmail: null, normalizedPhone: "+9731" }), save: async () => undefined, recordDelivery: async (attempt) => void states.push(attempt.status), delivery: { send: async () => { throw new Error("provider down"); } }, generateToken: () => "secret", now: () => new Date(0) }); await service.request("+9731"); expect(states).toEqual(["queued", "failed"]); });
+});

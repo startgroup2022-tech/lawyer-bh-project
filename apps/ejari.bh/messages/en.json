@@ -1,0 +1,324 @@
+{
+  "site": {
+    "langSwitch": "العربية",
+    "brand": "Ejari"
+  },
+  "nav": {
+      "home": "Home",
+      "services": "Services",
+      "about": "About Ejari",
+      "pricing": "Pricing",
+      "help": "Help",
+      "login": "Login",
+      "createAccount": "Create Account"
+  },
+  "cta": {
+    "start": "Get Started",
+    "learn": "See Features",
+    "whatsapp": "Chat on WhatsApp"
+  },
+  "hero": {
+    "badge": "The official rental management platform in the Kingdom of Bahrain",
+    "title": "Your lease. Your property. Your rights.",
+    "highlight": "All in one platform.",
+    "subtitle": "Manage your leases, payments and property maintenance with ease and security, in accordance with the laws of the Kingdom of Bahrain.",
+    "searchPlaceholder": "What would you like to do today?",
+    "searchHint": "Example: I want to renew an apartment lease in Muharraq",
+    "newContract": "Create New Contract",
+    "newContractDesc": "Create a tenancy contract in simple steps",
+    "verifyContract": "Verify Contract",
+    "verifyContractDesc": "Verify the validity of any tenancy contract"
+  },
+  "services": {
+    "label": "Services",
+    "title": "Everything you need in one place",
+    "subtitle": "Complete solutions to manage your properties, leases and payments with ease and security.",
+    "renewal": {
+      "title": "Renewals",
+      "desc": "Renew your leases easily before they expire."
+    },
+    "documents": {
+      "title": "Documents",
+      "desc": "Store and organize all your documents in one place."
+    },
+    "maintenance": {
+      "title": "Maintenance",
+      "desc": "Request maintenance and track your requests to completion."
+    },
+    "properties": {
+      "title": "Properties",
+      "desc": "Add and manage your properties and units with ease."
+    },
+    "payments": {
+      "title": "Payments",
+      "desc": "Pay your rent and access your receipts anytime."
+    },
+    "contracts": {
+      "title": "Contracts",
+      "desc": "Create and manage tenancy contracts easily and securely."
+    },
+    "learnMore": "Explore More"
+  },
+  "howItWorks": {
+    "label": "How Ejari Works",
+    "title": "Managing your tenancy is easier",
+    "subtitle": "From creating your account to activating your contract, everything happens in simple and secure steps.",
+    "step1": {
+      "title": "Create Your Account",
+      "desc": "Register as a landlord or tenant in just a few minutes."
+    },
+    "step2": {
+      "title": "Add Your Property",
+      "desc": "Add your property details and available units."
+    },
+    "step3": {
+      "title": "Create Your Lease",
+      "desc": "Enter your contract details using approved templates."
+    },
+    "step4": {
+      "title": "Sign Electronically",
+      "desc": "Sign your contract securely through electronic signing."
+    },
+    "step5": {
+      "title": "Pay the Fees",
+      "desc": "Pay electronically and receive your receipt instantly."
+    },
+    "step6": {
+      "title": "Activated",
+      "desc": "Your contract is registered and becomes active and approved."
+    },
+    "cta": "Get Started"
+  },
+  "stats": {
+    "label": "Ejari in Numbers",
+    "title": "A trusted platform for rental management",
+    "subtitle": "Building a simpler and more transparent digital rental experience for everyone.",
+    "properties": "Registered Properties",
+    "contracts": "Tenancy Contracts",
+    "users": "Registered Users",
+    "transactions": "Digital Transactions",
+    "trustedTitle": "Secure & Trusted",
+    "trustedSubtitle": "By official entities in the Kingdom of Bahrain"
+  },
+  "app": {
+    "label": "Ejari App",
+    "title": "Ejari, wherever you go",
+    "subtitle": "Manage your transactions, contracts and payments, and receive notifications directly on your phone.",
+    "download": "Download the app",
+    "available": "Available on",
+    "appStore": "App Store",
+    "googlePlay": "Google Play",
+    "scan": "Scan to download the app"
+  },
+  "partners": {
+    "label": "Our Partners",
+    "title": "Connected with key entities",
+    "subtitle": "An integrated ecosystem connecting the rental sector across the Kingdom of Bahrain.",
+    "rera": "Real Estate Regulatory Authority",
+    "bahrain": "Kingdom of Bahrain Government",
+    "ewa": "Electricity & Water Authority",
+    "municipality": "Municipal Affairs",
+    "banks": "Banks & Financial Institutions"
+  },
+  "contact": {
+    "title": "See it in your portfolio.",
+    "subtitle": "Request a demo and we'll walk you through a live tenant onboarding in under 15 minutes."
+  },
+  "footer": {
+    "description": "Ejari is the digital platform for property and tenancy management in the Kingdom of Bahrain.",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "support": "Support",
+    "contact": "Contact Us",
+    "home": "Home",
+    "about": "About Ejari",
+    "faq": "Frequently Asked Questions",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "rights": "All rights reserved.",
+    "madeBy": "Made by"
+  },
+  "owner": {
+    "title": "Owner Portal",
+    "platform": "EJARI PLATFORM",
+    "welcome": "Welcome to your dashboard",
+    "welcomeShort": "Welcome",
+    "ownerLabel": "Owner",
+    "profileDescription": "Manage your account",
+
+    "nav": {
+      "dashboard": "Dashboard",
+      "properties": "My Properties",
+      "units": "Units",
+      "contracts": "Contracts",
+      "notifications": "Notifications",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Logout"
+    },
+
+    "mobile": {
+      "openMenu": "Open menu"
+    },
+
+    "createContract": "Create New Contract",
+
+    "sections": {
+      "main": "Main",
+      "properties": "Property Management",
+      "contracts": "Contracts",
+      "activity": "Activity",
+      "account": "Account"
+    },
+
+    "stats": {
+      "properties": "Total Properties",
+      "units": "Total Units",
+      "activeContracts": "Active Contracts",
+      "pending": "Pending Actions"
+    },
+
+    "recentContracts": "Recent Contracts",
+    "recentContractsDesc": "Track your latest contracts and updates",
+    "viewAll": "View All",
+    "quickActions": "Quick Actions",
+
+    "status": {
+      "pending": "Pending Approval",
+      "approved": "Approved",
+      "expiring": "Expiring Soon"
+    },
+
+    "notification": {
+      "newContract": "You have a new contract awaiting approval",
+      "newContractDesc": "A new rental contract is waiting for your review and approval.",
+      "expiring": "A contract is expiring soon",
+      "expiringDesc": "The contract for unit 204 will expire in 30 days.",
+      "approved": "Contract approved successfully",
+      "approvedDesc": "The rental contract has been successfully approved.",
+      "center": "Notification Center",
+      "centerDesc": "Everything new in one place",
+      "newCount": "new notifications",
+      "new": "new",
+      "minutesAgo": "10 minutes ago",
+      "hourAgo": "1 hour ago",
+      "hoursAgo": "3 hours ago",
+      "viewAll": "View all notifications",
+      "emptyTitle": "No notifications",
+      "emptyDescription": "We'll let you know here when something new happens.",
+      "close": "Close"
+    },
+
+    "propertiesPage": {
+      "title": "My Properties",
+      "subtitle": "Manage all your properties and units and monitor their status from one place.",
+      "addProperty": "Add Property",
+
+      "breadcrumbDashboard": "Dashboard",
+      "breadcrumbProperties": "My Properties",
+
+      "search": "Search for a property...",
+      "filter": "Filter",
+      "allProperties": "All Properties",
+
+      "propertyCount": "You have {count} properties",
+
+      "occupancy": "Occupancy",
+      "registration": "Registration No.:",
+      "viewProperty": "View Property",
+      "more": "More",
+      "active": "Active",
+
+      "units": "Units",
+      "rented": "Rented",
+      "available": "Available",
+
+      "listTitle": "All Properties",
+      "listSubtitle": "View your properties and monitor the status of their units.",
+
+      "stats": {
+        "totalProperties": "Total Properties",
+        "totalUnits": "Total Units",
+        "rentedUnits": "Rented Units",
+        "availableUnits": "Available Units",
+
+        "properties": "Total Properties",
+        "propertiesDesc": "Registered properties",
+
+        "units": "Total Units",
+        "unitsDesc": "All units",
+
+        "rented": "Rented Units",
+        "rentedDesc": "Units with active contracts",
+
+        "available": "Available Units",
+        "availableDesc": "Ready for rent"
+      },
+
+      "card": {
+        "totalUnits": "Total Units",
+        "rented": "Rented",
+        "available": "Available",
+        "occupancy": "Occupancy",
+        "viewProperty": "View Property"
+      },
+
+      "demo": {
+        "property1": {
+          "name": "Pearl Tower",
+          "type": "Residential Building",
+          "location": "Manama, Bahrain"
+        },
+
+        "property2": {
+          "name": "Al Nakheel Complex",
+          "type": "Residential Complex",
+          "location": "Muharraq, Bahrain"
+        },
+
+        "property3": {
+          "name": "Bahrain Tower",
+          "type": "Mixed-Use Building",
+          "location": "Juffair, Bahrain"
+        }
+      }
+    },
+
+    "unitsPage": {
+      "title": "Units",
+      "description": "Manage and monitor all units belonging to your properties.",
+      "breadcrumbDashboard": "Dashboard",
+      "breadcrumbUnits": "Units",
+      "addUnit": "Add Unit",
+      "totalUnits": "Total Units",
+      "rentedUnits": "Rented Units",
+      "availableUnits": "Available Units",
+      "expiringSoon": "Expiring Soon",
+      "search": "Search for a unit or property...",
+      "allProperties": "All Properties",
+      "allStatuses": "All Statuses",
+      "allUnits": "All Units",
+      "registeredUnits": "registered units",
+      "unit": "Unit",
+      "property": "Property",
+      "type": "Type",
+      "rent": "Rent",
+      "monthlyRent": "Monthly Rent",
+      "tenant": "Tenant",
+      "status": "Status",
+      "area": "Area",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "contractExpiry": "Contract Expiry",
+      "none": "None",
+      "unitAvailable": "Unit is available",
+      "statuses": {
+        "rented": "Rented",
+        "available": "Available",
+        "expiring": "Expiring Soon",
+        "unknown": "Unknown"
+      }
+    }
+  }
+
+}

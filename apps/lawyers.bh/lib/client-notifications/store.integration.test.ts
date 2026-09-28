@@ -1,0 +1,74 @@
+import fs from 'node:fs/promises';
+import {randomUUID} from 'node:crypto';
+import postgres from 'postgres';
+import {afterAll,beforeAll,beforeEach,describe,expect,it} from 'vitest';
+import {createInboxStore} from './store';
+import type {InboxInput} from './input';
+const url=process.env.CLIENT_AUTH_TEST_DATABASE_URL;
+describe.skipIf(!url)('notification database isolation and events',()=>{
+  const connection=new URL(url??'postgres://localhost/client_auth_test');
+  if(connection.hostname!=='localhost'||connection.pathname!=='/client_auth_test')throw Error('Local test database only');
+  const socket=connection.searchParams.get('host');connection.searchParams.delete('host');
+  if(socket&&!socket.startsWith('/private/tmp/country-migration.'))throw Error('Unexpected socket');
+  const schema=`inbox_test_${randomUUID().replaceAll('-','')}`;
+  const sql=postgres(connection.toString(),{host:socket??'localhost',connection:{search_path:schema},onnotice:()=>{}});
+  const store=createInboxStore(sql);
+  const a='11111111-1111-4111-8111-111111111111',b='22222222-2222-4222-8222-222222222222';
+  const input=(overrides:Partial<InboxInput>={}):InboxInput=>({requestIds:[a],filter:'all',before:null,beforeId:null,readId:null,readThrough:null,...overrides});
+  beforeAll(async()=>{
+    await sql.unsafe(`CREATE SCHEMA ${schema}`);
+    await sql.unsafe(`CREATE TABLE bahrain_emergency_requests(id uuid PRIMARY KEY,payment_status text DEFAULT 'pending',service_status text DEFAULT 'pending',updated_at timestamptz DEFAULT now());
+      CREATE TABLE bahrain_communication_messages(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),request_id uuid REFERENCES bahrain_emergency_requests(id),sender_role text,created_at timestamptz DEFAULT now());
+      CREATE TABLE bahrain_admin_mobile_notification_sends(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),audience text,state text,title_ar text,body_ar text,title_en text,body_en text,completed_at timestamptz);`);
+    await sql.unsafe(await fs.readFile('drizzle/0049_mobile_client_notifications.sql','utf8'));
+  });
+  beforeEach(async()=>{await sql`TRUNCATE bahrain_emergency_requests, bahrain_admin_mobile_notification_sends, mobile_client_notifications CASCADE`;});
+  afterAll(async()=>{try{await sql.unsafe(`DROP SCHEMA IF EXISTS ${schema} CASCADE`);}finally{await sql.end();}});
+  it('records real transitions, not repeated updates, and scopes reads to request capabilities',async()=>{
+    await sql`INSERT INTO bahrain_emergency_requests(id) VALUES (${a}),(${b})`;
+    await sql`UPDATE bahrain_emergency_requests SET payment_status='success'`;
+    await sql`UPDATE bahrain_emergency_requests SET updated_at=now()`;
+    const page=await store.run(input(),null);
+    expect(page.items).toHaveLength(1);expect(page.items[0].kind).toBe('payment_success');
+    const [other]=await sql`SELECT id FROM mobile_client_notifications WHERE request_id=${b}`;
+    await store.run(input({readId:other.id}),null);
+    expect((await store.run(input(),null)).unreadCount).toBe(1);
+    await store.run(input({readId:page.items[0].id}),null);
+    expect((await store.run(input({filter:'unread'}),null)).items).toHaveLength(0);
+    expect((await store.run(input({requestIds:[b]}),null)).unreadCount).toBe(1);
+  });
+  it('only records lawyer messages and completed client broadcasts, with account-specific reads',async()=>{
+    await sql`INSERT INTO bahrain_emergency_requests(id) VALUES (${a})`;
+    await sql`INSERT INTO bahrain_communication_messages(request_id,sender_role) VALUES (${a},'client'),(${a},'lawyer')`;
+    await sql`UPDATE bahrain_communication_messages SET sender_role=sender_role`;
+    await sql`INSERT INTO bahrain_admin_mobile_notification_sends(audience,state,title_ar,body_ar,title_en,body_en,completed_at) VALUES ('clients','completed','خبر','تفاصيل','News','Details',now()),('all_lawyers','completed','خاص','خاص','Private','Private',now()),('clients','failed','خطأ','خطأ','Failed','Failed',now())`;
+    expect((await store.run(input(),null)).items.map(x=>x.kind)).toEqual(['new_message']);
+    const page=await store.run(input(),'client-a');expect(page.items).toHaveLength(2);
+    await store.run(input({readThrough:page.snapshotAt}),'client-a');
+    expect((await store.run(input(),'client-a')).unreadCount).toBe(0);
+    expect((await store.run(input(),'client-b')).unreadCount).toBe(1);
+  });
+  it('paginates equal timestamps without omissions and preserves new events after read-all cutoff',async()=>{
+    await sql`INSERT INTO bahrain_emergency_requests(id) VALUES (${a})`;
+    await sql`INSERT INTO bahrain_communication_messages(request_id,sender_role,created_at) SELECT ${a}::uuid,'lawyer','2026-01-01'::timestamptz FROM generate_series(1,55)`;
+    const first=await store.run(input(),null);expect(first.items).toHaveLength(50);expect(first.nextCursor).not.toBeNull();
+    const second=await store.run(input({before:first.nextCursor!.at,beforeId:first.nextCursor!.id}),null);
+    expect(second.items).toHaveLength(5);expect(new Set([...first.items,...second.items].map(x=>x.id)).size).toBe(55);
+    await sql`INSERT INTO bahrain_communication_messages(request_id,sender_role,created_at) VALUES (${a},'lawyer',now()+interval '1 second')`;
+    await store.run(input({readThrough:first.snapshotAt}),null);
+    expect((await store.run(input(),null)).unreadCount).toBe(1);
+  });
+  it('keeps service transitions durable, rolls them back with source failures, and cascades deleted requests',async()=>{
+    await sql`INSERT INTO bahrain_emergency_requests(id) VALUES (${a})`;
+    await sql`UPDATE bahrain_emergency_requests SET service_status='mobilizing' WHERE id=${a}`;
+    await sql`UPDATE bahrain_emergency_requests SET service_status='completed' WHERE id=${a}`;
+    expect((await store.run(input(),null)).items.map(x=>x.kind).sort()).toEqual(['service_completed','service_mobilizing']);
+    await expect(sql.begin(async tx=>{await tx`UPDATE bahrain_emergency_requests SET service_status='cancelled' WHERE id=${a}`;throw Error('rollback');})).rejects.toThrow('rollback');
+    expect((await store.run(input(),null)).items).toHaveLength(2);
+    const page=await store.run(input(),null);
+    await store.run(input({readThrough:page.snapshotAt}),null);
+    await sql`DELETE FROM bahrain_emergency_requests WHERE id=${a}`;
+    expect((await store.run(input(),null)).items).toHaveLength(0);
+    expect(await sql`SELECT * FROM mobile_client_notification_reads`).toHaveLength(0);
+  });
+});

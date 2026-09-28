@@ -1,0 +1,14 @@
+/node_modules
+/.next
+/out
+/.env*.local
+/.env
+
+# Drizzle migration meta — we want migrations tracked, but not the journal.
+/drizzle/meta/_journal.json.bak
+
+# OS / editor
+.DS_Store
+.idea
+.vscode/*
+!.vscode/settings.json

@@ -1,0 +1,28 @@
+services:
+  # Local Postgres for the lawyers.bh Legal SOS feature.
+  # Port 5433 on the host to avoid conflicts with any system Postgres,
+  # while keeping the in-container port at the default 5432.
+  postgres:
+    image: postgres:16
+    container_name: lawyers-bh-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lawyers
+      POSTGRES_PASSWORD: lawyers_dev_password
+      POSTGRES_DB: lawyers_bh
+    ports:
+      - "5433:5432"
+    volumes:
+      - lawyers-bh-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lawyers -d lawyers_bh"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  # Drizzle Studio (web UI for the DB) is NOT bundled here — run it
+  # locally with `pnpm --filter lawyers.bh db:studio` so it always
+  # picks up the latest schema without container rebuilds.
+
+volumes:
+  lawyers-bh-pgdata:

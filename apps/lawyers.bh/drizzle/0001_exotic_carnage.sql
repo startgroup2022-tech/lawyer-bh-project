@@ -1,0 +1,1 @@
+ALTER TABLE "emergency_requests" ADD COLUMN "last_advocate_location" json;

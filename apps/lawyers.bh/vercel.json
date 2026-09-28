@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/cron/legalsos-account-purge",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/private-uploads",
+      "schedule": "40 2 * * *"
+    },
+    {
+      "path": "/api/cron/sos-offer-expiry",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/cron/lawyer-license-expiry",
+      "schedule": "15 21 * * *"
+    },
+    {
+      "path": "/api/sos/dispatch/payouts/auto-settle?olderThanDays=14",
+      "schedule": "0 3 * * *"
+    }
+  ]
+}

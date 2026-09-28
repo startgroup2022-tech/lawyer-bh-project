@@ -1,0 +1,367 @@
+{
+  "metadata": {
+    "home": {
+      "title": "Saudi Lawyers — Legal Services in Bahrain",
+      "description": "Your secure gateway to legal advice, consultations and services in the Kingdom of Bahrain. Licensed by the Ministry of Justice."
+    },
+    "about": {
+      "title": "About — Saudi Lawyers",
+      "description": "Saudi Lawyers is an electronic mediation platform connecting you with licensed lawyers and legal advisors in the Kingdom of Bahrain."
+    },
+    "directory": {
+      "title": "Lawyer Directory — Saudi Lawyers",
+      "description": "Browse certified law firms, registered lawyers, legal experts, mediators and arbitrators in the Kingdom of Bahrain."
+    },
+    "bookAppointment": {
+      "title": "Book an Appointment — Saudi Lawyers",
+      "description": "Schedule a legal consultation online, by phone, by video call or at the office with a licensed lawyer in Bahrain."
+    },
+    "join": {
+      "title": "Join the Platform — Saudi Lawyers",
+      "description": "Register as a service provider on the Saudi Lawyers platform — lawyers, consultants, experts, mediators and arbitrators."
+    },
+    "policeDirectory": {
+      "title": "Police Directory — Saudi Lawyers",
+      "description": "Emergency hotlines, police departments and governorate stations directory for the Kingdom of Bahrain."
+    },
+    "terms": {
+      "title": "Terms & Conditions — Saudi Lawyers",
+      "description": "Terms and conditions, privacy policy and user agreement governing use of the Saudi Lawyers platform."
+    },
+    "refundPolicy": {
+      "title": "Refund Policy — Saudi Lawyers",
+      "description": "Refund and return policy for services obtained through the Saudi Lawyers platform."
+    },
+    "legalTools": {
+      "title": "Legal Tools — Saudi Lawyers",
+      "description": "Free legal calculators for court fees, legal deadlines and legal interest in the Kingdom of Bahrain."
+    }
+  },
+  "site": {
+    "phone": "+973 1753 7070",
+    "email": "info@lawyers.bh",
+    "whatsapp": "+973 3647 0706",
+    "location": "Kingdom of Bahrain",
+    "address": "Saraya Square Complex, Building 1853G, Road 1546, Block 815, Isa Town",
+    "hours": "Sat - Thu: 7:00 AM - 10:00 PM",
+    "langSwitch": "العربية",
+    "tagline": "Your secure gateway to legal advice and services in the Kingdom of Bahrain.",
+    "platformName": "Bahrain Lawyers Platform"
+  },
+  "nav": {
+    "home": "Home",
+    "appointLawyer": "Appoint a Lawyer",
+    "appointLawyerPracticing": "Practicing Lawyer",
+    "appointLawyerCassation": "Lawyer before Cassation",
+    "appointExpert": "Appoint an Expert",
+    "expertFinancial": "Financial & Accounting Expert",
+    "expertEngineering": "Engineering Expert",
+    "expertTechnical": "Technical Expert",
+    "expertFeasibility": "New Projects & Feasibility Studies",
+    "expertManagement": "Management Consultation",
+    "mediation": "Appoint a Mediator",
+    "mediationCivil": "Civil & Commercial Disputes",
+    "mediationCriminal": "Criminal Cases",
+    "mediationSharia": "Sharia Cases",
+    "joinPlatform": "Join Platform",
+    "contactUs": "Contact Us",
+    "requestService": "Request Service",
+    "about": "About Us",
+    "directory": "Lawyers Directory",
+    "faq": "FAQ",
+    "policeDir": "Police Directory",
+    "legalTools": "Legal Tools",
+    "terms": "Terms & Conditions",
+    "refundPolicy": "Refund Policy",
+    "back": "Back"
+  },
+  "hero": {
+    "slide1": {
+      "badge": "Saudi Lawyers Platform",
+      "title": "Your Secure Gateway to Legal Advice & Services",
+      "subtitle": "We are just one call away to solve your problem in the fastest time, at the lowest cost and with the highest efficiency",
+       "cta": "Book Your Consultation Now"
+    },
+    "slide3": {
+      "badge": "Business & Investment",
+      "title": "Invest in the Kingdom of Bahrain",
+      "subtitle": "Establish your company and start your success story with comprehensive business services and expert legal guidance.",
+      "cta": "Start Now"
+    },
+    "slide4": {
+      "badge": "Dispute Resolution",
+      "title": "Alternative Dispute Resolution",
+      "subtitle": "Professional mediation, conciliation, and arbitration services to resolve disputes efficiently and amicably.",
+      "cta": "Request Mediation"
+    },
+    "videoBannerTitle": "Contact us via Video Call Service",
+    "videoBannerSubtitle": "For assistance, contact Investors' Services Specialist through video call",
+    "videoBannerCta": "BOOK APPOINTMENT"
+  },
+"services": {
+  "label": "Our Services",
+  "title": "Electronic Services of Saudi Lawyers Platform",
+  "subtitle": "Specialized legal services from licensed practitioners in the Kingdom of Bahrain",
+  "requestService": "Request Service",
+  "legal": {
+    "title": "Legal Consultations",
+    "desc": "Specialized legal consultations from licensed lawyers and consultants across all areas of law."
+  },
+  "comprehensive": {
+    "title": "Legal Representation & Filing Lawsuits",
+    "desc": "Comprehensive legal representation and follow-up on cases and court proceedings, either in person or remotely, to protect your rights quickly and reliably."
+  },
+  "firms": {
+    "title": "Directory of Accredited Lawyers and Law Firms",
+    "desc": "Access law firms and lawyers accredited by the Ministry of Justice."
+  },
+  "lawyerAuthorization": {
+    "title": "Appoint a Lawyer",
+    "desc": "Request the appointment of a lawyer to follow up on your case or represent you legally."
+  },
+  "business": {
+    "title": "Company Formation & Business Services",
+    "desc": "Company registration, trademark registration, feasibility studies, and business support services in Bahrain."
+  },
+  "execution": {
+    "title": "Debt Collection & Judgment Enforcement",
+    "desc": "Enforcement services including eviction, seizure of property, and enforcement of court judgments."
+  },
+  "notary": {
+    "title": "Contract Drafting & Notarization",
+    "desc": "Powers of attorney, real estate transactions, company contracts, and legal notarization."
+  },
+  "forms": {
+    "title": "Ministry of Justice Forms",
+    "desc": "Browse and download official forms issued by the Ministry of Justice — execution, notarization, Sharia, criminal, and more."
+  }
+},
+  "fees": {
+    "label": "Transparent Pricing",
+    "title": "Unified Legal Fees Agreement",
+    "subtitle": "Clear and affordable pricing for all legal consultation methods",
+    "online": "Online Consultation",
+    "onlineDesc": "Submit your query electronically and receive expert legal guidance",
+    "phone": "Telephone Call",
+    "phoneDesc": "Direct phone consultation with a licensed legal professional",
+    "office": "Office Visit",
+    "officeDesc": "In-person consultation at a registered law office in Bahrain",
+    "currency": "BD"
+  },
+  "about": {
+    "title": "About Saudi Lawyers Platform",
+    "description": "Saudi Lawyers is an electronic mediation platform established to provide a range of legal services and consultations through licensed lawyers and legal advisors authorized by the Ministry of Justice, Islamic Affairs and Endowments, as well as licensed institutions and companies registered with the Ministry of Industry, Commerce and Tourism — all officially listed on the platform to ensure maximum benefit for clients, facilitate access to legal rights, promote transparency in litigation, and connect beneficiaries with judicial and legal service providers easily and efficiently.",
+    "legalNotice": "Legal Notice:",
+    "legalNoticeText": "All lawyers and legal offices displayed on this platform are officially registered in the Roll of Lawyers with the Ministry of Justice, Islamic Affairs and Waqf, duly licensed in accordance with the applicable laws and regulations of the Kingdom of Bahrain."
+  },
+  "clearance": {
+    "label": "Government Entities",
+    "title": "Ministries of the Kingdom of Saudi Arabia",
+"description": "Browse the official websites of Saudi Arabia's ministries and access their government services.",    "citizens": "Citizens & Residents",
+    "companies": "Companies & Businesses",
+    "visitors": "Visitors & Tourists",
+    "government": "Government Transactions",
+    "partner": "Official Partner",
+    "ministry": "Licensed by the Ministry of Justice, Islamic Affairs and Waqf"
+  },
+  "practiceAreas": {
+    "label": "Practice Areas",
+    "title": "Legal Cases & Consultations",
+    "subtitle": "Specialized representation across every major area of Bahraini law — from civil and criminal to maritime, securities and intellectual property."
+  },
+  "footer": {
+    "description": "Your secure gateway to legal advice and services in the Kingdom of Bahrain.",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "legal": "Legal",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "refund": "Refund & Return Policy",
+    "news": "News & Events",
+    "phone": "Phone",
+    "location": "Location",
+    "instagram": "Instagram",
+    "emailLabel": "Email",
+    "lawyersOnly": "Services for Lawyers Only",
+    "policeDir": "Police Station Directory",
+    "copyright": "Copyright",
+    "allRights": "All rights reserved.",
+    "madeBy": "Made by"
+  },
+  "whatsapp": {
+    "title": "Need Legal Help?",
+    "subtitle": "Chat with us on WhatsApp"
+  },
+  "sos": {
+    "ctaShort": "Legal SOS",
+    "ctaLong": "Legal SOS — Emergency Response",
+    "ctaTagline": "Don't speak. Don't sign. Press SOS.",
+    "heroTitle": "Legal SOS",
+    "heroSubtitle": "We connect you to the nearest advocate in Bahrain within minutes. Available 24/7.",
+    "stepLabels": {
+      "case": "Case Type",
+      "kyc": "Your Details",
+      "consent": "Sign & Submit"
+    },
+    "caseSection": {
+      "title": "What is the emergency?",
+      "subtitle": "Pick the option that matches your situation."
+    },
+    "kycSection": {
+      "title": "Who is requesting?",
+      "subtitle": "Required by Bahrain law for verification (KYC).",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "As written on your ID",
+      "idType": "ID Type",
+      "idCpr": "Civil ID (CPR)",
+      "idResidence": "Residence Permit",
+      "idPassport": "Passport",
+      "idNumber": "ID Number",
+      "phone": "Phone",
+      "phonePlaceholder": "+973…",
+      "description": "Brief description (optional)",
+      "descriptionPlaceholder": "Anything the advocate should know before arriving",
+      "useMyLocation": "Use my current location",
+      "locationCaptured": "Location captured",
+      "locationFailed": "Location not available",
+      "locationManualLabel": "Address (if location not available)"
+    },
+    "consentSection": {
+      "title": "Service Agreement",
+      "subtitle": "Read and electronically sign the SOS Service Agreement.",
+      "showArabic": "العربية",
+      "showEnglish": "English",
+      "checkboxRead": "I have read and agree to the Terms and Conditions.",
+      "checkboxSignature": "Clicking 'I Agree' constitutes my binding electronic signature under Bahrain TES Law.",
+      "signatureLabel": "Draw your signature",
+      "signatureClear": "Clear",
+      "submit": "I Agree & Submit Request",
+      "submitting": "Submitting…",
+      "agreementHash": "Contract version"
+    },
+    "feeBanner": {
+      "label": "Initial Response Fee",
+      "note": "Charged on advocate acceptance. 50% on cancellation after acceptance. Non-refundable post-arrival."
+    },
+    "errors": {
+      "missingFields": "Please complete all required fields.",
+      "missingConsent": "Please tick both consent boxes to continue.",
+      "missingSignature": "Please draw your signature in the box.",
+      "submitFailed": "Could not submit your request. Please try again or call dispatch."
+    },
+    "confirmation": {
+      "title": "Request received",
+      "subtitle": "An emergency advocate is being dispatched. Estimated arrival: under 10 minutes.",
+      "caseRef": "Case Reference",
+      "downloadAgreement": "Download signed agreement (PDF)",
+      "callDispatch": "Call dispatch",
+      "whatsappDispatch": "Open WhatsApp with dispatch",
+      "rateService": "Rate the service when complete",
+      "thankYou": "Thank you. Stay calm. Do not speak or sign anything until the advocate arrives."
+    },
+    "available": "Advocates available 24/7",
+    "tagline": "Because the first hour defines your position.",
+    "rating": {
+      "title": "Rate the service",
+      "subtitle": "Your feedback helps us improve emergency response in Bahrain.",
+      "submit": "Submit rating",
+      "submitting": "Submitting…",
+      "thanks": "Thank you for the feedback.",
+      "pickStars": "Please pick a star rating.",
+      "commentPlaceholder": "Optional comments — speed, professionalism, outcome…"
+    },
+    "lawyerJoin": {
+      "eyebrow": "Become an Emergency Advocate",
+      "title": "Join the Legal SOS roster",
+      "subtitle": "Receive emergency dispatches inside your radius. You sign once, set your rates, and stay in control of your availability.",
+      "profileSection": "Your professional profile",
+      "coverageSection": "Coverage area",
+      "coverageHint": "We dispatch emergencies that fall inside your radius from this base location.",
+      "casesSection": "Cases & rates",
+      "casesHint": "Pick the cases you accept. Leave the rate empty to use the platform baseline.",
+      "consentSection": "SOS Service Agreement",
+      "consentHint": "The same agreement clients sign — you sign as an Advocate.",
+      "captureLocation": "Use my current location",
+      "submit": "Submit Application",
+      "approvalNotice": "Applications are activated by dispatch after the registration number is verified against the Roll of Practising Lawyers.",
+      "baselineFee": "Platform baseline: {fee} BHD",
+      "fields": {
+        "fullName": "Full Name",
+        "registrationNo": "Registration No (Roll)",
+        "email": "Email",
+        "phone": "Phone",
+        "baseAddress": "Base Address (optional)",
+        "baseAddressPlaceholder": "Office or building address",
+        "radiusKm": "Emergency Radius (km)",
+        "customRate": "Your rate (BHD, optional)"
+      },
+      "errors": {
+        "missingFields": "Please complete name, registration number, phone and email.",
+        "invalidEmail": "Please enter a valid email address.",
+        "missingLocation": "Please capture your base location.",
+        "invalidRadius": "Radius must be between 1 and 200 km.",
+        "noCasesEnabled": "Please enable at least one case type.",
+        "missingConsent": "Please tick both consent boxes.",
+        "missingSignature": "Please draw your signature.",
+        "submitFailed": "Could not submit your application. Please try again."
+      },
+      "success": {
+        "title": "Application received",
+        "subtitle": "Dispatch will verify your registration number and activate your profile within one business day.",
+        "backHome": "Back to home"
+      }
+    },
+    "lawyerLogin": {
+      "eyebrow": "Advocate Sign-In",
+      "title": "Sign in to your dashboard",
+      "subtitle": "Enter your registered email and we'll send you a one-time sign-in link.",
+      "emailLabel": "Email",
+      "submit": "Send Sign-In Link",
+      "noAccount": "Not signed up yet?",
+      "joinHere": "Apply here",
+      "expired": "That sign-in link has expired. Please request a new one.",
+      "sent": {
+        "title": "Check your email",
+        "subtitle": "We sent a sign-in link to your inbox. It expires in 15 minutes.",
+        "useDifferentEmail": "Use a different email"
+      }
+    },
+    "lawyerDashboard": {
+      "eyebrow": "Emergency Advocate",
+      "logout": "Sign out",
+      "online": "Online",
+      "offline": "Offline",
+      "onlineHeadline": "You are receiving emergency requests",
+      "offlineHeadline": "You will not receive new dispatches",
+      "goOnline": "Go Online",
+      "goOffline": "Go Offline",
+      "radius": "Radius: {km} km",
+      "myCasesTitle": "My active cases",
+      "noMyCases": "No assigned cases right now.",
+      "pickupsTitle": "Pending in your radius",
+      "noPickups": "No pending cases nearby.",
+      "refresh": "Refresh",
+      "accept": "Accept",
+      "openMap": "Open map",
+      "markArrived": "I've arrived",
+      "markCompleted": "Mark completed",
+      "whatsapp": "WhatsApp client",
+      "client": "Client",
+      "location": "Location",
+      "enableNotifications": "Enable alerts",
+      "notificationsOn": "Alerts on",
+      "notificationsDenied": "Alerts blocked",
+      "newPickup": "New emergency in your radius",
+      "webviewBannerTitle": "Foreground-only alerts inside the app",
+      "webviewBannerBody": "While this dashboard is open the siren will ring for new pickups in your radius. For background push alerts, open lawyers.bh in Safari and Add to Home Screen.",
+      "errors": {
+        "acceptFailed": "Could not accept",
+        "completeFailed": "Could not complete",
+        "arrivedFailed": "Could not mark arrived",
+        "geolocationUnavailable": "Geolocation is not available on this device.",
+        "geolocationDenied": "Could not read your location. Please enable GPS and try again.",
+        "geofenceFailed": "You are still {actual} m away from the request location (must be within {required} m to mark arrival)."
+      }
+    }
+  }
+}
