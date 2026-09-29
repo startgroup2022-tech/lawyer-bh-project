@@ -20,6 +20,7 @@ import {
   Percent,
   BriefcaseBusiness,
   ShieldAlert,
+  Palette,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -86,6 +87,13 @@ export default async function AdminDashboardPage({ params }: Props) {
       title: isAr ? "إدارة الدول" : "Country management",
       description: isAr ? "تفعيل الدول للتطبيق والموقع ورفع الخلفيات." : "Manage app and website countries and backgrounds.",
       href: "/admin/countries", icon: Globe, category: "operations", superOnly: true,
+    },
+    {
+      title: isAr ? "مظهر التطبيق" : "App Appearance",
+      description: isAr
+        ? "خلفية التطبيق ودرجة شفافيتها ولون الخلفية."
+        : "The app background image, its opacity and the background colour.",
+      href: "/admin/appearance", icon: Palette, category: "operations", superOnly: true,
     },
     {
       title: isAr ? "إدارة اللغات" : "Language management",

@@ -67,4 +67,25 @@ describe('country availability', () => {
       expect(() => parseCountryPatch(input)).toThrow();
     }
   });
+  it('accepts whole-percentage opacity and rejects fractions, strings and out-of-range values', () => {
+    expect(parseCountryPatch({backgroundOpacity:0})).toEqual({backgroundOpacity:0});
+    expect(parseCountryPatch({backgroundOpacity:100})).toEqual({backgroundOpacity:100});
+    expect(parseCountryPatch({backgroundOpacity:45, backgroundOverlayOpacity:15})).toEqual({backgroundOpacity:45, backgroundOverlayOpacity:15});
+    for (const input of [{backgroundOpacity:101}, {backgroundOpacity:-1}, {backgroundOpacity:45.5}, {backgroundOpacity:'50'}, {backgroundOverlayOpacity:null}]) {
+      expect(() => parseCountryPatch(input)).toThrow();
+    }
+  });
+  it('normalizes a background colour to upper-case hex and clears on empty', () => {
+    expect(parseCountryPatch({backgroundColor:'#f5f4f1'})).toEqual({backgroundColor:'#F5F4F1'});
+    expect(parseCountryPatch({backgroundColor:''})).toEqual({backgroundColor:null});
+    expect(parseCountryPatch({backgroundColor:null})).toEqual({backgroundColor:null});
+    for (const input of [{backgroundColor:'red'}, {backgroundColor:'#fff'}, {backgroundColor:'#12345G'}, {backgroundColor:123}]) {
+      expect(() => parseCountryPatch(input)).toThrow();
+    }
+  });
+  it('carries appearance fields through mergeCountrySettings with safe defaults', () => {
+    const all = mergeCountrySettings([{code:'BH', appEnabled:true, websiteEnabled:false, backgroundUrl:'https://cdn.example/bg.webp', backgroundOpacity:70, backgroundOverlayOpacity:20, backgroundColor:'#F5F4F1'}], []);
+    expect(all.find(c => c.code === 'BH')).toMatchObject({backgroundOpacity:70, backgroundOverlayOpacity:20, backgroundColor:'#F5F4F1'});
+    expect(all.find(c => c.code === 'SA')).toMatchObject({backgroundOpacity:100, backgroundOverlayOpacity:0, backgroundColor:null, backgroundUrl:null});
+  });
 });

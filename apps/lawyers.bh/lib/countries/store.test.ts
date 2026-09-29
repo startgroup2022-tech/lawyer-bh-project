@@ -54,4 +54,42 @@ describe('managed country loading', () => {
     const country = (await loadManagedCountries()).find(item => item.code === 'SA');
     expect(country).toMatchObject({ translations: { ar: 'السعودية' }, languages: ['ar'] });
   });
+
+  it('persists appearance fields without touching the activation flags', async () => {
+    const onConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
+    const values = vi.fn(() => ({ onConflictDoUpdate }));
+    mocks.insert.mockReturnValue({ values });
+
+    await saveCountrySettings('BH', { backgroundUrl: 'https://cdn.example/bg.webp', backgroundOpacity: 70, backgroundOverlayOpacity: 20, backgroundColor: '#F5F4F1' });
+
+    expect(values).toHaveBeenCalledWith({
+      code: 'BH', backgroundUrl: 'https://cdn.example/bg.webp', backgroundOpacity: 70, backgroundOverlayOpacity: 20, backgroundColor: '#F5F4F1',
+    });
+    const update = onConflictDoUpdate.mock.calls[0]?.[0]?.set;
+    expect(update).toMatchObject({ backgroundUrl: 'https://cdn.example/bg.webp', backgroundOpacity: 70, backgroundOverlayOpacity: 20, backgroundColor: '#F5F4F1' });
+    expect(update).not.toHaveProperty('appEnabled');
+  });
+
+  it('clears the background with an explicit null so the app falls back to the default', async () => {
+    const onConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
+    const values = vi.fn(() => ({ onConflictDoUpdate }));
+    mocks.insert.mockReturnValue({ values });
+
+    await saveCountrySettings('BH', { backgroundUrl: null });
+
+    expect(values).toHaveBeenCalledWith({ code: 'BH', backgroundUrl: null });
+    expect(onConflictDoUpdate.mock.calls[0]?.[0]?.set).toMatchObject({ backgroundUrl: null });
+  });
+
+  it('reads appearance columns back into the managed country', async () => {
+    mocks.execute
+      .mockResolvedValueOnce([{ code: 'BH', backgroundUrl: 'https://cdn.example/bg.webp', backgroundOpacity: 45, backgroundOverlayOpacity: 15, backgroundColor: '#082B67' }])
+      .mockResolvedValueOnce([{ code: 'BH', isActive: true, tablesProvisioned: true, phoneCode: '+973', currencyCode: 'BHD', defaultLocale: 'ar' }])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([]);
+    const country = (await loadManagedCountries()).find(item => item.code === 'BH');
+    expect(country).toMatchObject({
+      backgroundUrl: 'https://cdn.example/bg.webp', backgroundOpacity: 45, backgroundOverlayOpacity: 15, backgroundColor: '#082B67',
+    });
+  });
 });

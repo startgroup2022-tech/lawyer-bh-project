@@ -13,6 +13,9 @@ export type CountrySetting = {
   appEnabled:boolean;
   websiteEnabled:boolean;
   backgroundUrl:string|null;
+  backgroundOpacity?:number;
+  backgroundOverlayOpacity?:number;
+  backgroundColor?:string|null;
   websiteUrl?:string|null;
   legalSosEnabled?:boolean;
   lawyersPlatformEnabled?:boolean;
@@ -35,6 +38,9 @@ export function mergeCountrySettings(settings:CountrySetting[], infrastructure:C
       translations:setting?.translations ?? {ar:country.nameAr, en:country.nameEn}, languages:setting?.languages ?? [],
       appEnabled:legalSosEnabled, websiteEnabled:lawyersPlatformEnabled,
       backgroundUrl:setting?.backgroundUrl ?? null, websiteUrl:lawyersPlatformUrl, tablesProvisioned:info?.tablesProvisioned ?? false,
+      backgroundOpacity:setting?.backgroundOpacity ?? 100,
+      backgroundOverlayOpacity:setting?.backgroundOverlayOpacity ?? 0,
+      backgroundColor:setting?.backgroundColor ?? null,
       servicesActive: !!info?.isActive && !!info?.tablesProvisioned,
       phoneCode:info?.phoneCode ?? null, currencyCode:info?.currencyCode ?? null, defaultLocale:info?.defaultLocale ?? 'en'};
   });
@@ -50,14 +56,45 @@ export function visibleCountries(countries:ManagedCountry[], product:CountryProd
   const canonical = parseCountryProduct(product);
   return countries.filter(c => canonical === 'legal_sos' ? c.legalSosEnabled : c.lawyersPlatformEnabled);
 }
-export function parseCountryPatch(input:unknown): Partial<Pick<CountrySetting,'lawyersPlatformUrl'|'backgroundUrl'>> {
+export type CountryAppearancePatch = Partial<
+  Pick<CountrySetting, 'lawyersPlatformUrl' | 'backgroundUrl' | 'backgroundOpacity' | 'backgroundOverlayOpacity' | 'backgroundColor'>
+>;
+
+const APPEARANCE_KEYS = [
+  'lawyersPlatformUrl',
+  'backgroundUrl',
+  'backgroundOpacity',
+  'backgroundOverlayOpacity',
+  'backgroundColor',
+] as const;
+
+export function parseCountryPatch(input:unknown): CountryAppearancePatch {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Invalid settings');
   const entries = Object.entries(input);
   if (!entries.length) throw new Error('Empty settings');
   return Object.fromEntries(entries.map(([key,value]) => {
-    if (key !== 'lawyersPlatformUrl' && key !== 'backgroundUrl') throw new Error('Invalid setting');
+    if (!(APPEARANCE_KEYS as readonly string[]).includes(key)) throw new Error('Invalid setting');
+    if (key === 'backgroundOpacity' || key === 'backgroundOverlayOpacity') return [key, normalizeOpacity(value)];
+    if (key === 'backgroundColor') return [key, normalizeBackgroundColor(value)];
     return [key, normalizeWebsiteUrl(value)];
   }));
+}
+
+/** Whole percentages only, so the stored value is exactly what the admin set. */
+function normalizeOpacity(value:unknown):number {
+  if (typeof value !== 'number' || !Number.isInteger(value) || value < 0 || value > 100) {
+    throw new Error('Opacity must be a whole percentage between 0 and 100');
+  }
+  return value;
+}
+
+/** `null`/empty clears the colour; anything else must be a `#RRGGBB` literal. */
+function normalizeBackgroundColor(value:unknown):string|null {
+  if (value === null || value === '') return null;
+  if (typeof value !== 'string' || !/^#[0-9A-Fa-f]{6}$/.test(value.trim())) {
+    throw new Error('Use a #RRGGBB colour');
+  }
+  return value.trim().toUpperCase();
 }
 
 function normalizeWebsiteUrl(value:unknown):string|null {

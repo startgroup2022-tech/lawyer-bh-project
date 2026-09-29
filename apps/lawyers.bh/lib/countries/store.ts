@@ -26,7 +26,9 @@ export async function loadManagedCountries() {
   const [settingsResult, infrastructureResult, translationsResult, membershipsResult] = await Promise.all([
     db.execute(sql`SELECT code, app_enabled AS "appEnabled", website_enabled AS "websiteEnabled",
       legal_sos_enabled AS "legalSosEnabled", lawyers_platform_enabled AS "lawyersPlatformEnabled",
-      lawyers_platform_url AS "lawyersPlatformUrl", website_url AS "websiteUrl", background_url AS "backgroundUrl"
+      lawyers_platform_url AS "lawyersPlatformUrl", website_url AS "websiteUrl", background_url AS "backgroundUrl",
+      background_opacity AS "backgroundOpacity", background_overlay_opacity AS "backgroundOverlayOpacity",
+      background_color AS "backgroundColor"
       FROM public.country_channel_settings`),
     db.execute(sql`SELECT code, is_active AS "isActive", tables_provisioned AS "tablesProvisioned",
       phone_code AS "phoneCode", currency_code AS "currencyCode", default_locale AS "defaultLocale"
@@ -54,6 +56,7 @@ export async function loadManagedCountries() {
     ...(settingsByCountry.get(code) ?? {
       code, appEnabled:false, websiteEnabled:false, backgroundUrl:null, websiteUrl:null,
       legalSosEnabled:false, lawyersPlatformEnabled:false, lawyersPlatformUrl:null,
+      backgroundOpacity:100, backgroundOverlayOpacity:0, backgroundColor:null,
     }),
     translations:translationsByCountry.get(code), languages:languagesByCountry.get(code),
   }));

@@ -7,6 +7,12 @@ import { saveCountrySettings } from '@/lib/countries/store';
 import { validateBackground } from '@/lib/countries/background';
 
 export const runtime = 'nodejs';
+
+function knownCountry(code:string) {
+  if (!countryCatalog.some(c => c.code === code)) throw new Error('Unknown country');
+  return code;
+}
+
 export async function POST(request:Request) {
   if (!(await requireSuperAdmin())) return NextResponse.json({error:'Forbidden'}, {status:403});
   if (request.headers.get('origin') !== new URL(request.url).origin) return NextResponse.json({error:'Invalid origin'}, {status:403});
@@ -15,8 +21,7 @@ export async function POST(request:Request) {
   let extension:string;
   try {
     const form = await request.formData();
-    code = String(form.get('code') ?? '');
-    if (!countryCatalog.some(c => c.code === code)) throw new Error('Unknown country');
+    code = knownCountry(String(form.get('code') ?? ''));
     const upload = form.get('background');
     if (!(upload instanceof File)) throw new Error('Select an image');
     file = upload;
@@ -32,5 +37,27 @@ export async function POST(request:Request) {
     return NextResponse.json({ok:true,backgroundUrl:blob.url});
   } catch {
     return NextResponse.json({error:'Could not save background'}, {status:503});
+  }
+}
+
+/**
+ * Clears the country's background so the app falls back to its default. The
+ * uploaded blob is intentionally left in storage: it is shared media that other
+ * countries or cached clients may still reference, and re-uploading is cheap.
+ */
+export async function DELETE(request:Request) {
+  if (!(await requireSuperAdmin())) return NextResponse.json({error:'Forbidden'}, {status:403});
+  if (request.headers.get('origin') !== new URL(request.url).origin) return NextResponse.json({error:'Invalid origin'}, {status:403});
+  let code:string;
+  try {
+    code = knownCountry(String((await request.json()).code ?? ''));
+  } catch {
+    return NextResponse.json({error:'Invalid country'}, {status:400});
+  }
+  try {
+    await saveCountrySettings(code, {backgroundUrl:null});
+    return NextResponse.json({ok:true,backgroundUrl:null});
+  } catch {
+    return NextResponse.json({error:'Could not clear background'}, {status:503});
   }
 }

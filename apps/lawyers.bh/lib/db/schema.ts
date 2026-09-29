@@ -34,6 +34,11 @@ export const countryChannelSettings = pgTable("country_channel_settings", {
   legalSosEnabled: boolean("legal_sos_enabled").default(false).notNull(),
   lawyersPlatformUrl: text("lawyers_platform_url"),
   backgroundUrl: text("background_url"),
+  // Mobile appearance knobs, managed from the admin panel. Opacity values are
+  // whole percentages (0-100) so the admin UI and the app agree exactly.
+  backgroundOpacity: integer("background_opacity").default(100).notNull(),
+  backgroundOverlayOpacity: integer("background_overlay_opacity").default(0).notNull(),
+  backgroundColor: text("background_color"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
