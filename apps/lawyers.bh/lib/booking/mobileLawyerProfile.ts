@@ -223,8 +223,8 @@ export async function loadMobileLawyerProfile(
     services: [],
     availability: availability.map((slot) => ({
       weekday: Number(slot.weekday),
-      start_time: slot.start_time,
-      end_time: slot.end_time,
+      start_time: slot.start_time.slice(0, 5),
+      end_time: slot.end_time.slice(0, 5),
       slot_duration_minutes: Number(slot.slot_duration_minutes),
       consultation_type: slot.consultation_type,
     })),

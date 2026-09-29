@@ -39,8 +39,8 @@ function toWire(row: {
     id: row.id,
     date: String(row.blocked_date).slice(0, 10),
     allDay: row.all_day === true,
-    startTime: row.all_day ? null : row.start_time,
-    endTime: row.all_day ? null : row.end_time,
+    startTime: row.all_day ? null : row.start_time?.slice(0, 5) ?? null,
+    endTime: row.all_day ? null : row.end_time?.slice(0, 5) ?? null,
     reasonType: row.reason_type,
     reason: row.reason,
   };

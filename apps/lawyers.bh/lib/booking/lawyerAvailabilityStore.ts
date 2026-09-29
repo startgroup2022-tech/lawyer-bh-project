@@ -389,7 +389,7 @@ export async function syncAppointmentSlotStatus(
 
 const APPOINTMENT_SELECT = `
   SELECT s.id AS slot_id, b.id AS booking_id, b.country_code,
-         s.appointment_date, s.start_time, s.end_time, s.status,
+         s.appointment_date::text AS appointment_date, s.start_time, s.end_time, s.status,
          b.admin_status, b.payment_status, b.service, b.consultation_type,
          b.duration_minutes, b.video_provider,
          b.selected_lawyer_id AS lawyer_id, b.selected_lawyer_name AS lawyer_name,
