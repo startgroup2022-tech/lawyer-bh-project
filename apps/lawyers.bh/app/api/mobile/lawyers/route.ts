@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
-import { db, schema } from "@/lib/db/client";
+
+import { getPublicLawyers } from "@/lib/publicLawyers";
 import { mapCountryProductAccessError, requireCountryProduct } from "@/lib/countries/product-access";
 
 export const runtime = "nodejs";
@@ -21,29 +21,11 @@ export async function GET(request: Request) {
     throw error;
   }
 
-  // bahrain_lawyers is the inheritance parent, so it can query every child
-  // country table. The country_code condition keeps this response isolated.
-  const lawyers = await db
-    .select({
-      id: schema.bahrainLawyers.id,
-      countryCode: schema.bahrainLawyers.countryCode,
-      fullNameAr: schema.bahrainLawyers.fullNameAr,
-      fullNameEn: schema.bahrainLawyers.fullNameEn,
-      phone: schema.bahrainLawyers.phone,
-      email: schema.bahrainLawyers.email,
-      status: schema.bahrainLawyers.status,
-      subscriptionType: schema.bahrainLawyers.subscriptionType,
-      isReviewAccount: schema.bahrainLawyers.isReviewAccount,
-    })
-    .from(schema.bahrainLawyers)
-    .where(
-      and(
-        eq(schema.bahrainLawyers.countryCode, country.code),
-        eq(schema.bahrainLawyers.status, "approved"),
-        eq(schema.bahrainLawyers.isActive, true),
-        eq(schema.bahrainLawyers.isReviewAccount, false),
-      ),
-    );
+  // Reuse the public directory query rather than a second hand-rolled one: it
+  // already enforces the publish rules (approved, active, public-directory
+  // visible, service-eligible) and computes the photo, specialties, experience
+  // and rating the app's profile screen renders.
+  const lawyers = await getPublicLawyers(country.code);
 
   return NextResponse.json({
     ok: true,
@@ -53,12 +35,26 @@ export async function GET(request: Request) {
       .map((lawyer) => ({
         id: lawyer.id,
         countryCode: lawyer.countryCode,
-        fullNameAr: lawyer.fullNameAr,
-        fullNameEn: lawyer.fullNameEn,
+        fullNameAr: lawyer.nameAr,
+        fullNameEn: lawyer.nameEn,
         phone: lawyer.phone,
         email: lawyer.email,
         status: lawyer.status,
         subscriptionType: lawyer.subscriptionType,
+        subscriptionTypes: lawyer.subscriptionTypes,
+        profileImageUrl: lawyer.image,
+        professionalTitleAr: lawyer.subtitleAr,
+        professionalTitleEn: lawyer.subtitleEn,
+        experienceYears: lawyer.experienceYears,
+        specialtyMain: lawyer.specialtyMain,
+        specialtySubs: lawyer.specialtySubs,
+        specialties: lawyer.specialties,
+        languages: lawyer.language,
+        workingHours: lawyer.workingHours,
+        registrationNo: lawyer.registrationNo,
+        registrationLevel: lawyer.registrationLevel,
+        rating: lawyer.rating,
+        reviewCount: lawyer.reviewCount,
       })),
   });
 }

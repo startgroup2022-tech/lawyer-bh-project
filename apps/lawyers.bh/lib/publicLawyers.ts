@@ -51,6 +51,14 @@ export type PublicLawyer = {
   reviewComments: PublicLawyerReviewComment[];
   licenseExpiryDate: string | null;
   createdAt: Date;
+
+  // Identity/contact fields the mobile directory publishes. The website
+  // directory never shows these, so they are additive — no existing consumer
+  // renders them, but the app's lawyer profile does.
+  phone: string | null;
+  email: string | null;
+  status: string;
+  isReviewAccount: boolean;
 };
 
 const allowedSpecialties = [
@@ -320,6 +328,10 @@ export async function getPublicLawyers(
       subscriptionTypes: schema.bahrainLawyers.subscriptionTypes,
       fullNameAr: schema.bahrainLawyers.fullNameAr,
       fullNameEn: schema.bahrainLawyers.fullNameEn,
+      phone: schema.bahrainLawyers.phone,
+      email: schema.bahrainLawyers.email,
+      status: schema.bahrainLawyers.status,
+      isReviewAccount: schema.bahrainLawyers.isReviewAccount,
       registrationNo: schema.bahrainLawyers.registrationNo,
       membershipNo: schema.bahrainLawyers.membershipNo,
       registrationLevel: schema.bahrainLawyers.registrationLevel,
@@ -483,6 +495,11 @@ export async function getPublicLawyers(
 
       licenseExpiryDate: row.licenseExpiryDate ?? null,
       createdAt: row.createdAt,
+
+      phone: row.phone ?? null,
+      email: row.email ?? null,
+      status: row.status ?? "approved",
+      isReviewAccount: Boolean(row.isReviewAccount),
     };
   });
 }
