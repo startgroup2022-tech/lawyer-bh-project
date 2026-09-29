@@ -13,6 +13,8 @@ import {
   uniqueIndex,
   pgEnum,
   date,
+  time,
+  smallint,
   jsonb,
   numeric,
   primaryKey,
@@ -430,6 +432,23 @@ export const bahrainLawyers = pgTable("bahrain_lawyers", {
     locale: varchar("locale", { length: 5 }).default("ar").notNull(),
     ipAddress: text("ip_address"),
     userAgent: text("user_agent"),
+
+    // Self-published profile fields, editable by the lawyer in the app.
+    bio: text("bio"),
+    city: text("city"),
+    professionalTitle: text("professional_title"),
+    professionalTitleEn: text("professional_title_en"),
+    officeLocation: text("office_location"),
+    languages: json("languages").$type<string[]>().default([]).notNull(),
+    qualifications: json("qualifications")
+      .$type<Array<{ title: string; institution?: string; year?: number }>>()
+      .default([])
+      .notNull(),
+    consultationFee: decimal("consultation_fee", { precision: 10, scale: 3 }),
+    acceptsOnline: boolean("accepts_online").default(false).notNull(),
+    acceptsInperson: boolean("accepts_inperson").default(false).notNull(),
+    profileStatus: text("profile_status").default("draft").notNull(),
+
     inviteToken: text("invite_token"),
     inviteTokenExpiresAt: timestamp("invite_token_expires_at", {
       withTimezone: true,
@@ -2608,6 +2627,131 @@ export const bookingReviews = pgTable(
       t.submittedAt,
     ),
     index("bahrain_booking_reviews_country_code_idx").on(t.countryCode),
+  ],
+);
+
+/**
+ * A lawyer's recurring weekly availability window. `weekday` follows Dart's
+ * `DateTime.weekday`: 1 = Monday .. 7 = Sunday. Windows of the same weekday may
+ * not overlap; that invariant is enforced with a per-lawyer advisory lock in
+ * the writer, and cross-window conflicts are rejected on read and on booking.
+ */
+export const lawyerAvailability = pgTable(
+  "bahrain_lawyer_availability",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    countryCode: varchar("country_code", { length: 2 }).default("BH").notNull(),
+    lawyerId: uuid("lawyer_id")
+      .notNull()
+      .references(() => bahrainLawyers.id, { onDelete: "cascade" }),
+    weekday: smallint("weekday").notNull(),
+    startTime: time("start_time").notNull(),
+    endTime: time("end_time").notNull(),
+    slotDurationMinutes: integer("slot_duration_minutes").default(30).notNull(),
+    consultationType: text("consultation_type").default("any").notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    index("lawyer_availability_lawyer_idx").on(t.lawyerId, t.weekday),
+    index("bahrain_lawyer_availability_country_code_idx").on(t.countryCode),
+    check(
+      "lawyer_availability_weekday_check",
+      sql`${t.weekday} BETWEEN 0 AND 6`,
+    ),
+    check(
+      "lawyer_availability_time_check",
+      sql`${t.startTime} < ${t.endTime}`,
+    ),
+    check(
+      "lawyer_availability_duration_check",
+      sql`${t.slotDurationMinutes} BETWEEN 5 AND 480`,
+    ),
+  ],
+);
+
+/**
+ * A date a lawyer will not accept appointments on, either the whole day or a
+ * time range inside it. `start_time`/`end_time` are both NULL for an all-day
+ * block, which is the common case (vacation, holiday, court).
+ */
+export const lawyerBlockedDates = pgTable(
+  "bahrain_lawyer_blocked_dates",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    countryCode: varchar("country_code", { length: 2 }).default("BH").notNull(),
+    lawyerId: uuid("lawyer_id")
+      .notNull()
+      .references(() => bahrainLawyers.id, { onDelete: "cascade" }),
+    blockedDate: date("blocked_date", { mode: "string" }).notNull(),
+    allDay: boolean("all_day").default(true).notNull(),
+    startTime: time("start_time"),
+    endTime: time("end_time"),
+    reasonType: text("reason_type").default("other").notNull(),
+    reason: text("reason"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    index("lawyer_blocked_dates_lawyer_idx").on(t.lawyerId, t.blockedDate),
+    index("bahrain_lawyer_blocked_dates_country_code_idx").on(t.countryCode),
+    check(
+      "lawyer_blocked_dates_range_check",
+      sql`${t.allDay} OR (${t.startTime} IS NOT NULL AND ${t.endTime} IS NOT NULL AND ${t.startTime} < ${t.endTime})`,
+    ),
+  ],
+);
+
+/**
+ * A confirmed slot on a booking request. One row per booking, created when the
+ * request is booked and released when it is cancelled/rejected, so the partial
+ * unique index below is the database-level guarantee against double booking.
+ * `status` is denormalised from the booking's `admin_status` for cheap reads.
+ */
+export const appointmentSlots = pgTable(
+  "bahrain_appointment_slots",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    countryCode: varchar("country_code", { length: 2 }).default("BH").notNull(),
+    lawyerId: uuid("lawyer_id")
+      .notNull()
+      .references(() => bahrainLawyers.id, { onDelete: "cascade" }),
+    bookingRequestId: uuid("booking_request_id")
+      .notNull()
+      .references(() => bookingRequests.id, { onDelete: "cascade" }),
+    appointmentDate: date("appointment_date", { mode: "string" }).notNull(),
+    startTime: time("start_time").notNull(),
+    endTime: time("end_time").notNull(),
+    status: text("status").default("booked").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    uniqueIndex("appointment_slots_booking_unique_idx").on(t.bookingRequestId),
+    // Double-booking guard: a lawyer may hold at most one active slot for a
+    // given date + start time. Cancelled/rejected rows drop out of the index.
+    uniqueIndex("appointment_slots_lawyer_date_start_active_uidx")
+      .on(t.lawyerId, t.appointmentDate, t.startTime)
+      .where(sql`${t.status} IN ('booked','confirmed')`),
+    index("appointment_slots_lawyer_date_idx").on(t.lawyerId, t.appointmentDate),
+    index("bahrain_appointment_slots_country_code_idx").on(t.countryCode),
+    check(
+      "appointment_slots_time_check",
+      sql`${t.startTime} < ${t.endTime}`,
+    ),
   ],
 );
 

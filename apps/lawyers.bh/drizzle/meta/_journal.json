@@ -609,6 +609,7 @@
     {"idx":117,"version":"7","when":1791072500000,"tag":"0126_saraya_offline_payment_reference","breakpoints":true},
     {"idx":118,"version":"7","when":1791072600000,"tag":"0127_saraya_lease_checkout_signing","breakpoints":true},
     {"idx":119,"version":"7","when":1791072700000,"tag":"0128_saraya_applicant_document_idempotency","breakpoints":true},
-    {"idx":120,"version":"7","when":1791072800000,"tag":"0129_mobile_appearance_settings","breakpoints":true}
+    {"idx":120,"version":"7","when":1791072800000,"tag":"0129_mobile_appearance_settings","breakpoints":true},
+    {"idx":121,"version":"7","when":1791072900000,"tag":"0130_lawyer_availability_appointments","breakpoints":true}
   ]
 }
