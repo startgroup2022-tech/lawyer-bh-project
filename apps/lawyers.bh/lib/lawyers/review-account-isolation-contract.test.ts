@@ -15,9 +15,11 @@ describe("review account server-side isolation contract", () => {
 
   it("excludes review accounts from the mobile directory", () => {
     const route = source("app/api/mobile/lawyers/route.ts");
-    expect(route).toContain(
-      "eq(schema.bahrainLawyers.isReviewAccount, false)",
-    );
+    // The mobile directory now reuses the shared public query, which filters
+    // review accounts in SQL, and additionally drops any review account the
+    // shared projection carries. Both keep the isolation in place.
+    expect(route).toContain("getPublicLawyers");
+    expect(route).toContain("!lawyer.isReviewAccount");
     expect(route).not.toContain("mobile-directory-review-visibility");
     expect(route).not.toContain("MOBILE_DIRECTORY_REVIEW_LAWYER_IDS");
   });
