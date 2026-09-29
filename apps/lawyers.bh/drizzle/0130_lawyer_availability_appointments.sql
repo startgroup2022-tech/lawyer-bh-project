@@ -98,12 +98,23 @@ ALTER TABLE public.bahrain_lawyers
 -- Constraints have no IF NOT EXISTS, so guard them for idempotent re-runs.
 DO $$
 BEGIN
+  -- The client offers draft/published/hidden; widen an install that ran the
+  -- earlier draft/published-only version of this migration.
+  IF EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'bahrain_lawyers_profile_status_check'
+      AND pg_get_constraintdef(oid) NOT LIKE '%hidden%'
+  ) THEN
+    ALTER TABLE public.bahrain_lawyers
+      DROP CONSTRAINT bahrain_lawyers_profile_status_check;
+  END IF;
+
   IF NOT EXISTS (
     SELECT 1 FROM pg_constraint WHERE conname = 'bahrain_lawyers_profile_status_check'
   ) THEN
     ALTER TABLE public.bahrain_lawyers
       ADD CONSTRAINT bahrain_lawyers_profile_status_check
-      CHECK (profile_status IN ('draft', 'published'));
+      CHECK (profile_status IN ('draft', 'published', 'hidden'));
   END IF;
 
   IF NOT EXISTS (

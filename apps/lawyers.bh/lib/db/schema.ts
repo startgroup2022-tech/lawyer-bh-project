@@ -2631,10 +2631,11 @@ export const bookingReviews = pgTable(
 );
 
 /**
- * A lawyer's recurring weekly availability window. `weekday` follows Dart's
- * `DateTime.weekday`: 1 = Monday .. 7 = Sunday. Windows of the same weekday may
- * not overlap; that invariant is enforced with a per-lawyer advisory lock in
- * the writer, and cross-window conflicts are rejected on read and on booking.
+ * A lawyer's recurring weekly availability window. `weekday` follows the app's
+ * convention: 0 = Sunday .. 6 = Saturday (the same numbering as Dart's
+ * `DateTime.weekday - 1`). Windows of the same weekday may not overlap; that
+ * invariant is enforced with a per-lawyer advisory lock in the writer, and
+ * cross-window conflicts are rejected on read and on booking.
  */
 export const lawyerAvailability = pgTable(
   "bahrain_lawyer_availability",

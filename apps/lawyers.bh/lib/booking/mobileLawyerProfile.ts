@@ -245,7 +245,7 @@ export type LawyerProfileUpdate = {
   languages?: string[];
   acceptsOnline?: boolean;
   acceptsInperson?: boolean;
-  profileStatus?: "draft" | "published";
+  profileStatus?: "draft" | "published" | "hidden";
 };
 
 const TEXT_LIMITS: Record<string, number> = {
@@ -348,7 +348,11 @@ export function parseLawyerProfileUpdate(
   }
 
   if (data.profileStatus !== undefined) {
-    if (data.profileStatus !== "draft" && data.profileStatus !== "published") {
+    if (
+      data.profileStatus !== "draft" &&
+      data.profileStatus !== "published" &&
+      data.profileStatus !== "hidden"
+    ) {
       return { ok: false, error: "invalid_status" };
     }
     update.profileStatus = data.profileStatus;
