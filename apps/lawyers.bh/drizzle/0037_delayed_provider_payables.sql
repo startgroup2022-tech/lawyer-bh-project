@@ -1,5 +1,3 @@
-BEGIN;
-
 DO $$
 DECLARE
   country_record RECORD;
@@ -83,5 +81,3 @@ BEGIN
   END LOOP;
 END
 $$;
-
-COMMIT;

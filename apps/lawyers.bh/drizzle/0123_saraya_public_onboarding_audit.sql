@@ -1,5 +1,3 @@
-BEGIN;
-
 SET LOCAL lock_timeout = '5s';
 
 CREATE TABLE "saraya_auth_audit_logs" (
@@ -33,5 +31,3 @@ CREATE INDEX "saraya_auth_audit_logs_user_created_idx"
   ON "saraya_auth_audit_logs" ("user_id", "created_at" DESC);
 CREATE INDEX "saraya_auth_audit_logs_event_created_idx"
   ON "saraya_auth_audit_logs" ("event", "created_at" DESC);
-
-COMMIT;

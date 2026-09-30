@@ -31,7 +31,7 @@ describe("0122 Saraya public onboarding audit", () => {
     expect(verify).toContain("saraya_auth_audit_logs_challenge_created_idx");
     const previous = journal.entries.find((entry) => entry.tag === "0122_saraya_public_rental_checkout");
     const current = journal.entries.find((entry) => entry.tag === "0123_saraya_public_onboarding_audit");
-    expect(current).toEqual(expect.objectContaining({ idx: 114 }));
+    expect(current).toEqual(expect.objectContaining({ idx: 123 }));
     expect(current!.when).toBeGreaterThan(previous!.when);
   });
 });

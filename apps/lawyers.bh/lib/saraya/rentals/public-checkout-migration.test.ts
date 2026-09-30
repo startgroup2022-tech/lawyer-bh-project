@@ -252,7 +252,7 @@ describe("0121 Saraya public rental checkout", () => {
     const previous = journal.entries.find((entry) => entry.tag === "0120_saraya_production_inventory");
     const current = journal.entries.find((entry) => entry.tag === "0122_saraya_public_rental_checkout");
 
-    expect(current).toEqual(expect.objectContaining({ idx: 113 }));
+    expect(current).toEqual(expect.objectContaining({ idx: 122 }));
     expect(current!.when).toBeGreaterThan(previous!.when);
   });
 });

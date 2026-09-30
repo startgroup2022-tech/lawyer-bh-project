@@ -1,6 +1,6 @@
 CREATE TYPE "public"."admin_role" AS ENUM('super_admin', 'admin', 'reviewer');--> statement-breakpoint
-CREATE TYPE "public"."provider_application_status" AS ENUM('pending', 'approved', 'rejected');--> statement-breakpoint
-CREATE TYPE "public"."provider_subscription_type" AS ENUM('lawyer', 'consultant', 'mediator', 'arbitrator', 'expert', 'private_executor', 'private_notary');--> statement-breakpoint
+CREATE TYPE "public"."provider_application_status" AS ENUM('pending', 'approved', 'rejected', 'suspended');--> statement-breakpoint
+CREATE TYPE "public"."provider_subscription_type" AS ENUM('lawyer', 'consultant', 'mediator', 'arbitrator', 'expert', 'private_executor', 'private_notary', 'translator');--> statement-breakpoint
 
 CREATE TABLE "admin_users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,

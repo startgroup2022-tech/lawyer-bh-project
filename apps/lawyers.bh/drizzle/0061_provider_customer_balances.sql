@@ -1,4 +1,3 @@
-BEGIN;
 CREATE TABLE IF NOT EXISTS public.provider_customer_balances (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   public_reference varchar(32) NOT NULL UNIQUE,
@@ -33,4 +32,3 @@ DROP INDEX IF EXISTS payment_allocations_provider_balance_uidx;
 CREATE UNIQUE INDEX payment_allocations_provider_balance_uidx ON public.bahrain_payment_allocations(provider_balance_id) WHERE provider_balance_id IS NOT NULL;
 ALTER TABLE public.bahrain_payment_allocations DROP CONSTRAINT IF EXISTS payment_allocations_exactly_one_request_check;
 ALTER TABLE public.bahrain_payment_allocations ADD CONSTRAINT payment_allocations_exactly_one_request_check CHECK (((booking_request_id IS NOT NULL)::int + (emergency_request_id IS NOT NULL)::int + (provider_balance_id IS NOT NULL)::int) = 1);
-COMMIT;

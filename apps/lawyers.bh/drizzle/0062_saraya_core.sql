@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE TYPE public.saraya_role AS ENUM (
   'super_admin', 'property_manager', 'accountant', 'maintenance', 'owner', 'tenant'
 );
@@ -152,5 +150,3 @@ CREATE TABLE public.saraya_audit_logs (
 );
 CREATE INDEX saraya_audit_logs_property_created_idx ON public.saraya_audit_logs(property_id, created_at DESC);
 CREATE INDEX saraya_audit_logs_actor_idx ON public.saraya_audit_logs(actor_user_id);
-
-COMMIT;

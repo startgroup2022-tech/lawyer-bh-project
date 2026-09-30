@@ -1,8 +1,8 @@
-CREATE TYPE "public"."emergency_case_type" AS ENUM('emergency_arrest', 'emergency_search', 'emergency_travel_ban', 'emergency_evidence', 'emergency_report');--> statement-breakpoint
+CREATE TYPE "public"."emergency_case_type" AS ENUM('emergency_arrest', 'emergency_search', 'emergency_travel_ban', 'emergency_evidence', 'emergency_report', 'emergency_consultation');--> statement-breakpoint
 CREATE TYPE "public"."id_type" AS ENUM('cpr', 'residence', 'passport');--> statement-breakpoint
 CREATE TYPE "public"."party_role" AS ENUM('client', 'advocate');--> statement-breakpoint
 CREATE TYPE "public"."payment_status" AS ENUM('pending', 'success', 'failed', 'refunded');--> statement-breakpoint
-CREATE TYPE "public"."service_status" AS ENUM('pending', 'mobilizing', 'arrived', 'completed', 'cancelled', 'disputed');--> statement-breakpoint
+CREATE TYPE "public"."service_status" AS ENUM('pending', 'mobilizing', 'arrived', 'completed', 'cancelled', 'disputed', 'in_progress');--> statement-breakpoint
 CREATE TABLE "consent_log" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"full_name" text NOT NULL,

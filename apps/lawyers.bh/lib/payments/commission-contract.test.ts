@@ -45,7 +45,7 @@ describe("lawyer commission contract", () => {
     const migration = readFileSync(migrationPath, "utf8");
 
     expect(journal.entries.find((entry) => entry.tag === tag)).toEqual({
-      idx: 49,
+      idx: 57,
       version: "7",
       when: 1788426000000,
       tag,

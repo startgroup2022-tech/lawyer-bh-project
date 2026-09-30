@@ -45,6 +45,6 @@ describe("0130 lawyer availability and appointments migration", () => {
   it("is registered in the journal by tag", () => {
     expect(
       journal.entries.find((entry) => entry.tag === "0130_lawyer_availability_appointments"),
-    ).toEqual(expect.objectContaining({ idx: 121 }));
+    ).toEqual(expect.objectContaining({ idx: 130 }));
   });
 });

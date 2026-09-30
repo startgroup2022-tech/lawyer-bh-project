@@ -11,6 +11,6 @@ describe("0127 applicant document idempotency migration", () => {
     // Look the entry up by tag rather than assuming it is the newest one, so
     // adding a later migration does not break this migration's own test.
     expect(journal.entries.find((entry) => entry.tag === "0128_saraya_applicant_document_idempotency"))
-      .toEqual(expect.objectContaining({ idx: 119 }));
+      .toEqual(expect.objectContaining({ idx: 128 }));
   });
 });

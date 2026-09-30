@@ -1,4 +1,3 @@
-BEGIN;
 
 -- The registration form no longer collects working hours. Make the column
 -- nullable in every country lawyer table that has already been provisioned.
@@ -32,4 +31,3 @@ BEGIN
 END
 $$;
 
-COMMIT;

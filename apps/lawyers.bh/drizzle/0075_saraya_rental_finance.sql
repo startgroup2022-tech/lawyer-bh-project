@@ -1,6 +1,6 @@
 CREATE TYPE "public"."saraya_rental_request_status" AS ENUM ('pending_owner_review', 'approved_awaiting_payment', 'rejected', 'paid_awaiting_signature', 'completed', 'cancelled');
 CREATE TYPE "public"."saraya_invoice_status" AS ENUM ('draft', 'due', 'partially_paid', 'paid', 'overdue', 'cancelled', 'refunded');
-CREATE TYPE "public"."saraya_payment_demand_status" AS ENUM ('pending', 'charge_created', 'captured', 'failed', 'cancelled', 'refunded');
+CREATE TYPE "public"."saraya_payment_demand_status" AS ENUM ('pending', 'charge_created', 'captured', 'failed', 'cancelled', 'refunded', 'verification_pending', 'paid');
 CREATE TYPE "public"."saraya_ledger_entry_type" AS ENUM ('charge', 'payment', 'refund', 'adjustment');
 
 CREATE TABLE "saraya_rental_requests" (

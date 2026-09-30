@@ -62,7 +62,7 @@ describe("0064 Saraya lease migration contract", () => {
   it("appends 0064 after 0063", () => {
     const previous = journal.entries.find((entry) => entry.tag === "0063_saraya_auth");
     const lease = journal.entries.find((entry) => entry.tag === "0064_saraya_leases");
-    expect(lease).toEqual(expect.objectContaining({ idx: 57, tag: "0064_saraya_leases" }));
+    expect(lease).toEqual(expect.objectContaining({ idx: 65, tag: "0064_saraya_leases" }));
     expect(lease!.idx).toBe(previous!.idx + 1);
   });
 });

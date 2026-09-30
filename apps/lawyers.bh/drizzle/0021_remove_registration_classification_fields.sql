@@ -1,4 +1,3 @@
-BEGIN;
 
 -- The registration form no longer collects registration level, working hours,
 -- or specialties. Keep the columns for backward compatibility, but make them
@@ -15,4 +14,3 @@ SET
   specialty_subs = '[]'::json,
   specialties = '{"main":"","subs":[]}'::json;
 
-COMMIT;

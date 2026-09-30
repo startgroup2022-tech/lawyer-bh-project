@@ -1,5 +1,3 @@
-BEGIN;
-
 -- Emergency-mobile lawyers do not provide working hours. Keep the column for
 -- web and legacy profiles, but allow it to be empty in every provisioned
 -- country lawyer table.
@@ -29,5 +27,3 @@ BEGIN
   END LOOP;
 END
 $$;
-
-COMMIT;

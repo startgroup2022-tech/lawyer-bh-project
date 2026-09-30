@@ -1,4 +1,3 @@
-BEGIN;
 CREATE TABLE IF NOT EXISTS public.provider_email_change_challenges (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   provider_id uuid NOT NULL REFERENCES public.bahrain_lawyers(id) ON DELETE CASCADE,
@@ -13,4 +12,3 @@ CREATE TABLE IF NOT EXISTS public.provider_email_change_challenges (
   CONSTRAINT provider_email_change_attempts_check CHECK (attempts BETWEEN 0 AND 5)
 );
 CREATE INDEX IF NOT EXISTS provider_email_change_provider_idx ON public.provider_email_change_challenges(provider_id, created_at DESC);
-COMMIT;

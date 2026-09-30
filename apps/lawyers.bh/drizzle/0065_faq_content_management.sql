@@ -1,5 +1,3 @@
-BEGIN;
-
 DO $$ BEGIN
   CREATE TYPE public.faq_status AS ENUM ('draft', 'published');
 EXCEPTION WHEN duplicate_object THEN NULL;
@@ -56,5 +54,3 @@ FROM (VALUES
 ) AS v(category_key,question_ar,question_en,answer_ar,answer_en,position)
 JOIN public.faq_categories c ON c.key=v.category_key
 WHERE NOT EXISTS (SELECT 1 FROM public.faq_questions q WHERE q.category_id=c.id AND q.question_en=v.question_en);
-
-COMMIT;

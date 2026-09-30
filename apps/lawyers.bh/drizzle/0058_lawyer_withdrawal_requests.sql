@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE TABLE IF NOT EXISTS public.lawyer_withdrawal_requests (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   lawyer_id uuid NOT NULL REFERENCES public.bahrain_lawyers(id) ON DELETE RESTRICT,
@@ -36,5 +34,3 @@ CREATE INDEX IF NOT EXISTS lawyer_withdrawal_requests_lawyer_status_idx
   ON public.lawyer_withdrawal_requests (lawyer_id, status, requested_at DESC);
 CREATE INDEX IF NOT EXISTS lawyer_withdrawal_requests_admin_queue_idx
   ON public.lawyer_withdrawal_requests (status, requested_at ASC);
-
-COMMIT;

@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE TABLE IF NOT EXISTS public.provider_profile_change_requests (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   provider_id uuid NOT NULL REFERENCES public.bahrain_lawyers(id) ON DELETE RESTRICT,
@@ -25,5 +23,3 @@ CREATE INDEX IF NOT EXISTS provider_profile_changes_status_idx
 CREATE UNIQUE INDEX IF NOT EXISTS provider_profile_changes_one_pending_uidx
   ON public.provider_profile_change_requests (provider_id, country_code)
   WHERE status = 'pending';
-
-COMMIT;
