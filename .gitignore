@@ -60,3 +60,6 @@ apps/lawyers.bh/.playwright-cli/
 # Generated preview artifacts
 apps/lawyers.bh/output/**/*.png
 apps/lawyers.bh/output/**/*.pdf
+
+# Generated self-host server bundle (produced by `npm run build:self-host`)
+apps/lawyers.bh/server.mjs

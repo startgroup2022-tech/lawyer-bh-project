@@ -30,3 +30,33 @@ greater than the last applied migration. Three traps make a from-zero build fail
 Editing an already-journaled migration is safe for production because the max
 `when` does not change: an existing database applies nothing new and never
 re-runs it. Verify a fix on a throwaway database before deploying.
+
+# Communication WebSocket on self-hosted servers
+
+The call-signaling socket lives at `/api/mobile/communications/ws`. Its route
+handler uses `experimental_upgradeWebSocket` from `@vercel/functions`, which
+only exists on a runtime that performs the HTTP upgrade for the function. A
+plain `next start` server does **not**: Next's router-server upgrade handler
+matches the app route, hits `if (matchedOutput) return socket.end();`, and the
+route handler never runs. The socket therefore closes with no handshake.
+
+Self-hosted deployments must use the bundled server instead:
+
+```
+npm run build            # next build
+npm run build:self-host  # emits ./server.mjs and ./build/self-host/socket-runtime.mjs
+npm run start:self-host  # node server.mjs
+```
+
+`server.mjs` runs Next's request handler and takes over only the socket path's
+`upgrade` events; `scripts/self-host-server.mjs` is the source and
+`scripts/build-self-host-server.mjs` (esbuild) bundles it. Both transports share
+`lib/communications/socket-runtime.ts`, so authentication, signal replay and
+call verification are identical. The runtime bundle is emitted outside `lib/`
+on purpose: Vite resolves `.mjs` before `.ts`, so a `lib/.../socket-runtime.mjs`
+would shadow the source and break its unit tests.
+
+Realtime delivery is Postgres `LISTEN/NOTIFY` (see
+`lib/communications/postgres-event-bridge.ts`) plus an in-process hub; chat
+itself is REST + push and does not need the socket.
+

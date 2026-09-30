@@ -23,6 +23,8 @@ beforeAll(async()=>{
   await sql`CREATE TEMP TABLE bahrain_emergency_requests(id uuid,service_status text,assigned_lawyer_id uuid)`;
   await sql`CREATE TEMP TABLE bahrain_communication_messages(id uuid DEFAULT gen_random_uuid(),request_id uuid,sender_role text,sender_id text,client_message_id uuid,body text)`;
   await sql`CREATE TEMP TABLE bahrain_communication_attachments(id uuid PRIMARY KEY,request_id uuid,sender_role text,sender_id text,name text,size int,content bytea DEFAULT ''::bytea,mime text,message_id uuid,created_at timestamptz DEFAULT now())`;
+  await sql`CREATE TEMP TABLE bahrain_communication_blocks(blocker_role text,blocker_id text,blocked_role text,blocked_id text,revoked_at timestamptz)`;
+  await sql`CREATE TEMP TABLE bahrain_communication_moderation_actions(action text,reversed_at timestamptz,expires_at timestamptz,target_role text,target_id text)`;
   await sql`INSERT INTO bahrain_emergency_requests VALUES('33333333-3333-4333-8333-333333333333','mobilizing','22222222-2222-4222-8222-222222222222')`;
 });
 afterAll(async()=>{if(run){const {sqlClient}=await import('@/lib/db/client');await sqlClient.end();}});

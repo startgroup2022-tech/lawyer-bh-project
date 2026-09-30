@@ -17,7 +17,9 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "seed:admin": "node scripts/seed-admin.mjs"
+    "seed:admin": "node scripts/seed-admin.mjs",
+    "build:self-host": "node scripts/build-self-host-server.mjs",
+    "start:self-host": "node server.mjs"
   },
   "dependencies": {
     "@fontsource/cairo": "^5.2.7",
@@ -70,6 +72,7 @@
     "eslint-config-next": "16.2.2",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "esbuild": "^0.25.0"
   }
 }

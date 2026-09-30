@@ -34,6 +34,7 @@ describe("request communication schema contract", () => {
       "requestId",
       "initiatorRole",
       "initiatorId",
+      "initiatorDataPurgedAt",
       "mediaKind",
       "status",
       "ringingAt",
