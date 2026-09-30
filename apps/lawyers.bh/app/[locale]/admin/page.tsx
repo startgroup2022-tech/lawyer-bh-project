@@ -21,6 +21,7 @@ import {
   BriefcaseBusiness,
   ShieldAlert,
   Palette,
+  CreditCard,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -247,6 +248,16 @@ export default async function AdminDashboardPage({ params }: Props) {
       icon: WalletCards,
       category: "operations",
       permission: "manage_finance",
+    },
+    {
+      title: isAr ? "إعدادات الدفع (Tap)" : "Payment Settings (Tap)",
+      description: isAr
+        ? "ضبط مفاتيح Tap لبيئتي الاختبار والحقيقية واختبار الاتصال."
+        : "Configure Tap keys for test and live, and test the connection.",
+      href: "/admin/tap-payments",
+      icon: CreditCard,
+      category: "operations",
+      superOnly: true,
     },
     {
       title: isAr ? "المحامون" : "Lawyers",

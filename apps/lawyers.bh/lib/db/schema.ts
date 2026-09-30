@@ -2862,3 +2862,27 @@ export const mobileNotificationTokenBindings = pgTable('mobile_notification_toke
   deviceKey:text('device_key').notNull().references(()=>mobileNotificationDevicePreferences.deviceKey,{onDelete:'cascade'}),
   lastSeenAt:timestamp('last_seen_at',{withTimezone:true}).notNull().defaultNow(),
 },t=>[index('mobile_notification_token_bindings_device_idx').on(t.deviceKey)]);
+
+/**
+ * Admin-managed Tap payment credentials. Single row (`id` is always true).
+ * Secret keys are encrypted at rest and never serialized back to a client.
+ */
+export const tapGatewaySettings = pgTable("tap_gateway_settings", {
+  id: boolean("id").primaryKey().default(true),
+  activeEnvironment: text("active_environment").default("test").notNull(),
+  liveEnabled: boolean("live_enabled").default(false).notNull(),
+  testSecretKeyEncrypted: text("test_secret_key_encrypted"),
+  testPublicKey: text("test_public_key"),
+  testMerchantId: text("test_merchant_id"),
+  testMarketplaceMid: text("test_marketplace_mid"),
+  liveSecretKeyEncrypted: text("live_secret_key_encrypted"),
+  livePublicKey: text("live_public_key"),
+  liveMerchantId: text("live_merchant_id"),
+  liveMarketplaceMid: text("live_marketplace_mid"),
+  lastTestStatus: text("last_test_status"),
+  lastTestAt: timestamp("last_test_at", { withTimezone: true }),
+  lastTestMessage: text("last_test_message"),
+  updatedBy: uuid("updated_by").references(() => adminUsers.id, { onDelete: "set null" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
