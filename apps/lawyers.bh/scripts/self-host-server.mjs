@@ -72,9 +72,3 @@ webSocketServer.on("connection", async (ws) => {
 server.listen(port, hostname, () => {
   console.log(`▲ lawyers.bh self-host server ready on http://${hostname}:${port}`);
 });
-
-// Next attaches its upgrade listener lazily during request handling; drop it
-// again whenever a request has been served so the WebSocket path stays ours.
-server.on("request", () => {
-  if (server.listenerCount("upgrade") > 1) stripNextUpgradeListeners();
-});
