@@ -60,3 +60,25 @@ Realtime delivery is Postgres `LISTEN/NOTIFY` (see
 `lib/communications/postgres-event-bridge.ts`) plus an in-process hub; chat
 itself is REST + push and does not need the socket.
 
+# Admin-managed Tap credentials
+
+`tap_gateway_settings` (migration `0131`) is a single-row table (`id boolean
+PRIMARY KEY DEFAULT true`, always `true`) holding TEST and LIVE Tap credentials
+so an administrator can switch environments without editing environment
+variables. Secret keys are stored AES-256-GCM encrypted, key derived with
+scrypt from `TAP_CONFIG_ENCRYPTION_KEY` (>= 16 chars; when unset the dashboard
+cannot save secrets and the `TAP_*` variables stay the source of truth).
+
+- Admin API `GET/PATCH/POST /api/admin/tap-settings` — `requireSuperAdmin()` +
+  the usual `origin === new URL(request.url).origin` check + `Cache-Control:
+  no-store`. `POST` probes the Tap API to verify a key; `PATCH` only writes the
+  fields supplied.
+- The DB check `tap_gateway_settings_live_requires_enable` forbids
+  `active_environment = 'live'` unless `live_enabled`, so a partial TEST setup
+  can never take real payments.
+- Stored credentials are hydrated into the existing synchronous Tap accessors
+  (`lib/tap/config.ts`) at boot via `instrumentation.ts` and after every save,
+  so all current callers are unchanged and the environment remains the fallback.
+- UI: `/admin/tap-payments` (`page.tsx` + `TapPaymentsContent.tsx`), registered
+  as a `superOnly` dashboard card. It only ever sees masked secrets.
+
