@@ -11,7 +11,7 @@ describe("published lawyer terms registration flow", () => {
 
   it("validates and records the accepted version on web registration", async () => {
     const route = await readFile(new URL("../join/route.ts", import.meta.url), "utf8");
-    expect(route).toContain("terms_version_stale");
+    expect(route).toContain("AGREEMENT_STALE");
     expect(route).toContain("lawyer_terms_acceptances");
   });
 });

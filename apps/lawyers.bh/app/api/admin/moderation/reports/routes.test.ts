@@ -41,6 +41,7 @@ describe("admin moderation routes", () => {
   });
 
   it("applies a chat suspension using the signed-in admin rather than a body admin id", async () => {
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
     const response = await ACTION(
       new Request("https://example.test", {
         method: "POST",
@@ -50,7 +51,7 @@ describe("admin moderation routes", () => {
           internalReason: "Repeated harassment",
           publicMessageAr: "تم تعطيل المحادثة مؤقتًا.",
           publicMessageEn: "Chat has been temporarily disabled.",
-          expiresAt: "2026-09-24T10:00:00.000Z",
+          expiresAt,
           adminId: "attacker",
         }),
       }),
@@ -64,7 +65,7 @@ describe("admin moderation routes", () => {
       internalReason: "Repeated harassment",
       publicMessageAr: "تم تعطيل المحادثة مؤقتًا.",
       publicMessageEn: "Chat has been temporarily disabled.",
-      expiresAt: "2026-09-24T10:00:00.000Z",
+      expiresAt,
     });
   });
 
