@@ -31,6 +31,24 @@ Editing an already-journaled migration is safe for production because the max
 `when` does not change: an existing database applies nothing new and never
 re-runs it. Verify a fix on a throwaway database before deploying.
 
+# Deployment access from this workspace
+
+There is **no deploy path from the agent workspace**. Do not spend time
+retrying it: the box has no `ssh`/`scp`/`rsync`, no `~/.ssh` keys, no Vercel
+CLI and no `VERCEL_*` credentials. TEST (`test.lawyers.bh`) is a self-hosted
+origin (`57.129.162.133`, `/var/www/lawyers-bh-project`) behind Cloudflare, so
+it can only be updated by an operator with server access. Black-box probing is
+still useful: a `404` from `test.lawyers.bh` on a route that exists in the
+working tree is the signal that the branch has not been deployed yet.
+
+# Appointment communications status predicates
+
+`lib/appointment-communications/status.ts` is the single source of truth for
+which appointment statuses are active vs terminal. `access.ts` and `store.ts`
+must call `isActive`/`isTerminal` rather than re-listing statuses — a
+duplicated set previously omitted `in_progress`, which made a started
+consultation unreachable (the lawyer got 403 and could not complete it).
+
 # Communication WebSocket on self-hosted servers
 
 The call-signaling socket lives at `/api/mobile/communications/ws`. Its route
