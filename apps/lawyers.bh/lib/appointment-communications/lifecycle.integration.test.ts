@@ -24,6 +24,7 @@ describe.skipIf(!localUrl)("appointment lifecycle end to end", () => {
   let clientToken: string;
   let lawyerToken: string;
   const strangerIds: string[] = [];
+  const extraBookingIds: string[] = [];
 
   beforeAll(async () => {
     process.env.CLIENT_AUTH_SECRET ||= "integration-test-client-secret-value";
@@ -47,11 +48,13 @@ describe.skipIf(!localUrl)("appointment lifecycle end to end", () => {
 
   afterAll(async () => {
     if (!sql) return;
-    await sql`DELETE FROM bahrain_appointment_notifications WHERE booking_request_id=${bookingId}`;
-    await sql`DELETE FROM bahrain_appointment_reminder_outbox WHERE booking_request_id=${bookingId}`;
-    await sql`DELETE FROM bahrain_appointment_slots WHERE booking_request_id=${bookingId}`;
-    await sql`DELETE FROM bahrain_appointment_conversations WHERE booking_request_id=${bookingId}`;
-    await sql`DELETE FROM bahrain_booking_requests WHERE id=${bookingId}`;
+    for (const id of [bookingId, ...extraBookingIds]) {
+      await sql`DELETE FROM bahrain_appointment_notifications WHERE booking_request_id=${id}`;
+      await sql`DELETE FROM bahrain_appointment_reminder_outbox WHERE booking_request_id=${id}`;
+      await sql`DELETE FROM bahrain_appointment_slots WHERE booking_request_id=${id}`;
+      await sql`DELETE FROM bahrain_appointment_conversations WHERE booking_request_id=${id}`;
+      await sql`DELETE FROM bahrain_booking_requests WHERE id=${id}`;
+    }
     await sql`DELETE FROM mobile_client_sessions WHERE client_id=${clientId}`;
     await sql`DELETE FROM mobile_client_accounts WHERE id=${clientId}`;
     await sql`DELETE FROM bahrain_lawyers WHERE id=${lawyerId}`;
@@ -61,6 +64,40 @@ describe.skipIf(!localUrl)("appointment lifecycle end to end", () => {
     }
     await sql.end();
   });
+
+  /** Inserts a booking row with a matching slot so the cancel flow can run. */
+  async function seedBooking(status: string, date: string): Promise<string> {
+    const id = randomUUID();
+    extraBookingIds.push(id);
+    await sql`INSERT INTO bahrain_booking_requests(
+        id,lang,service,consultation_type,consultation_method,consultation_price,amount_bd,
+        duration_minutes,appointment_date,appointment_time,assignment_mode,
+        selected_lawyer_id,selected_lawyer_name,assigned_to_email,
+        customer_name,customer_phone,customer_email,payment_status,admin_status,
+        request_payload,country_code,client_account_id)
+      VALUES(${id},'en','Consultation','paid','video','50',50,30,${date},'09:30','selected',
+        ${lawyerId},'IT Lawyer',${`it-${lawyerId}@example.com`},
+        'IT Client','+97336000000',${`it-${clientId}@example.com`},'paid',${status},
+        ${JSON.stringify({ source: "integration-test" })}::jsonb,'BH',${clientId})`;
+    await sql`INSERT INTO bahrain_appointment_slots(
+        country_code,lawyer_id,booking_request_id,appointment_date,start_time,end_time,status)
+      VALUES('BH',${lawyerId},${id},${date},'09:30','10:00','booked')`;
+    const { ensureAppointmentConversation } = await import("./access");
+    await ensureAppointmentConversation(id);
+    return id;
+  }
+
+  const clientCancel = (id: string) =>
+    import("@/app/api/mobile/client-appointments/[bookingId]/route").then(({ DELETE }) =>
+      DELETE(
+        new Request(`https://test.lawyers.bh/api/mobile/client-appointments/${id}`, {
+          method: "DELETE",
+          headers: { authorization: `Bearer ${clientToken}`, "content-type": "application/json" },
+          body: JSON.stringify({ reason: "integration test" }),
+        }),
+        { params: Promise.resolve({ bookingId: id }) },
+      ),
+    );
 
   const lifecycle = (action: string, token: string) =>
     import("@/app/api/mobile/appointments/[bookingId]/lifecycle/route").then(({ PATCH }) =>
@@ -243,5 +280,49 @@ describe.skipIf(!localUrl)("appointment lifecycle end to end", () => {
     const [row] = await sql<{ admin_status: string }[]>`
       SELECT admin_status FROM bahrain_booking_requests WHERE id=${bookingId}`;
     expect(row.admin_status).toBe("completed");
+  });
+
+  it("cancels a client appointment, releases the slot, and notifies the lawyer", async () => {
+    const id = await seedBooking("approved", "2027-01-05");
+    const { scheduleAppointmentReminders } = await import("./reminder-store");
+    await scheduleAppointmentReminders(id);
+
+    const response = await clientCancel(id);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ ok: true, status: "cancelled" });
+
+    const [booking] = await sql<{ admin_status: string; cancelled_at: Date | null }[]>`
+      SELECT admin_status, cancelled_at FROM bahrain_booking_requests WHERE id=${id}`;
+    expect(booking.admin_status).toBe("cancelled");
+    expect(booking.cancelled_at).not.toBeNull();
+
+    const [slot] = await sql<{ status: string }[]>`
+      SELECT status FROM bahrain_appointment_slots WHERE booking_request_id=${id}`;
+    expect(slot.status).toBe("cancelled");
+
+    const reminders = await sql<{ status: string }[]>`
+      SELECT status FROM bahrain_appointment_reminder_outbox WHERE booking_request_id=${id}`;
+    expect(reminders.length).toBeGreaterThan(0);
+    expect(reminders.every((reminder) => reminder.status === "cancelled")).toBe(true);
+
+    const notified = await sql<{ recipient_role: string }[]>`
+      SELECT recipient_role FROM bahrain_appointment_notifications
+      WHERE booking_request_id=${id} AND kind='appointment_cancelled'`;
+    // The cancelling client is not told about their own action.
+    expect(notified.map((row) => row.recipient_role)).toEqual(["lawyer"]);
+  });
+
+  it("does not cancel an appointment that already completed", async () => {
+    const id = await seedBooking("completed", "2027-01-06");
+
+    const response = await clientCancel(id);
+    expect(response.status).toBe(404);
+
+    const [booking] = await sql<{ admin_status: string }[]>`
+      SELECT admin_status FROM bahrain_booking_requests WHERE id=${id}`;
+    expect(booking.admin_status).toBe("completed");
+    const [slot] = await sql<{ status: string }[]>`
+      SELECT status FROM bahrain_appointment_slots WHERE booking_request_id=${id}`;
+    expect(slot.status).toBe("booked");
   });
 });

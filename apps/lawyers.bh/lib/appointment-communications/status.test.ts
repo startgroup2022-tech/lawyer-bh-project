@@ -74,4 +74,17 @@ describe("appointment lifecycle state machine", () => {
     expect(isActive("not-a-status")).toBe(false);
     expect(isTerminal("not-a-status")).toBe(false);
   });
+
+  it("keeps a conversation reachable for a started consultation", () => {
+    // `in_progress` is the state a lawyer moves into after "start"; the
+    // participant must still be able to complete it and keep chatting.
+    expect(isActive("in_progress")).toBe(true);
+  });
+
+  it("recognises the legacy booked/pending statuses as active", () => {
+    for (const legacy of ["booked", "pending"]) {
+      expect(isActive(legacy)).toBe(true);
+      expect(isTerminal(legacy)).toBe(false);
+    }
+  });
 });
