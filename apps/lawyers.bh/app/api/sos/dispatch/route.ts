@@ -10,6 +10,8 @@ import {
 } from "@/lib/sos/emergencyCaseCatalog";
 import { hashConsentText } from "@/lib/sos/consentText";
 import { renderSosConsentPdf } from "@/lib/sos/pdfRenderer";
+import { toSqlTimestamp } from "@/lib/db/sql-timestamp";
+import { toSqlJson } from "@/lib/db/sql-json";
 
 export const runtime = "nodejs"; // pdf-lib + fs require node runtime
 
@@ -98,7 +100,7 @@ export async function POST(req: Request) {
     ) VALUES (
       ${country.code}, ${body.fullName.trim()}, ${body.idType},
       ${body.idNumber.trim()}, ${"client"}, ${body.signatureDataUrl},
-      ${contractTextHash}, ${body.locale}, ${ipAddress}, ${userAgent}, ${now}
+      ${contractTextHash}, ${body.locale}, ${ipAddress}, ${userAgent}, ${toSqlTimestamp(now)}::timestamptz
     )
     RETURNING id
   `;
@@ -149,7 +151,7 @@ export async function POST(req: Request) {
     ) VALUES (
       ${country.code}, ${caseRef}, ${consent.id}, ${body.caseType},
       ${body.description || null},
-      ${sqlClient.json(
+      ${toSqlJson(
         body.location ??
           (body.manualAddress
             ? { lat: 0, lng: 0, address: body.manualAddress }

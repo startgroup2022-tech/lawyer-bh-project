@@ -8,6 +8,7 @@ import {
   ensureCountryProvisionedForRegistration,
 } from "@/lib/db/country-tables";
 import { issueMobileLawyerToken } from "@/lib/mobile-lawyer-auth";
+import { toSqlJson } from "@/lib/db/sql-json";
 import { isEmail } from "@/lib/postmark";
 import { submitJoinApplication } from "../../../join/route";
 import { MAX_ATTACHMENT_BYTES } from "@/lib/communications/attachment-policy";
@@ -308,7 +309,7 @@ export async function POST(request: Request) {
 
     const rows = await sqlClient`
       INSERT INTO ${sqlClient(tables.lawyers)} (
-        country_code, subscription_type, full_name_ar, full_name_en,
+        country_code, subscription_type, full_name, full_name_ar, full_name_en,
         registration_no, registration_level, iban_number,
         experience_years, phone, email, password_hash,
         language, working_hours, specialty_main, specialty_subs, specialties,
@@ -318,11 +319,11 @@ export async function POST(request: Request) {
         status, is_active, profile_completed,
         locale, ip_address, user_agent
       ) VALUES (
-        ${country.code}, ${"lawyer"}, ${fullNameAr}, ${fullNameEn},
+        ${country.code}, ${"lawyer"}, ${fullNameAr}, ${fullNameAr}, ${fullNameEn},
         ${registrationNo}, ${registrationLevel}, ${ibanNumber},
         ${experienceYears}, ${phone}, ${email}, ${passwordHash},
         ${language}, ${workingHours}, ${null},
-        ${sqlClient.json(specialtySubs)}, ${sqlClient.json(specialties)},
+        ${toSqlJson(specialtySubs)}, ${toSqlJson(specialties)},
         ${profileImage.name}, ${imageType}, ${blob.url}, ${blob.pathname},
         ${licenseExpiryDate}, ${false},
         ${"pending"}, ${false}, ${false},

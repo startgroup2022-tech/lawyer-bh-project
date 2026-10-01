@@ -849,7 +849,7 @@ withDocumentField("personalIdFile", () => uploadToBlob({
     const rows = await sqlClient`
       INSERT INTO ${sqlClient(lawyersTable)} (
         country_code, notary_id, subscription_type, subscription_types,
-        full_name_ar, full_name_en, registration_no, registration_level,
+        full_name, full_name_ar, full_name_en, registration_no, registration_level,
         experience_years, email, phone, password_hash, language, working_hours,
         specialty_main, specialty_subs, specialties, cr_number,
         institution_license_file_name, institution_license_file_mime_type,
@@ -870,7 +870,7 @@ withDocumentField("personalIdFile", () => uploadToBlob({
       ) VALUES (
         ${countryCode}, ${notaryId || null}, ${subscriptionType},
         ${JSON.stringify(subscriptionTypes)}::jsonb,
-        ${fullNameAr}, ${fullNameEn}, ${licenseNumber},
+        ${fullNameAr}, ${fullNameAr}, ${fullNameEn}, ${licenseNumber},
         ${professionalProfile.registrationLevel},
         ${experienceYears}, ${email}, ${phone}, ${passwordHash}, ${language},
         ${professionalProfile.workingHours}, ${professionalProfile.specialtyMain},

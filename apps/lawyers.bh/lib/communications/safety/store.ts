@@ -1,4 +1,5 @@
 import type { CommunicationParticipant } from "../access";
+import { toSqlJson } from "@/lib/db/sql-json";
 import type {
   CommunicationActorRole,
   CommunicationReportCategory,
@@ -138,7 +139,7 @@ export async function createCommunicationReport(
       ${input.requestId}::uuid,
       ${input.reporter.role}, ${input.reporter.id},
       ${input.reported.role}, ${input.reported.id},
-      ${input.category}, ${input.description}, ${sqlClient.json(evidenceIds)},
+      ${input.category}, ${input.description}, ${toSqlJson(evidenceIds)},
       ${input.idempotencyKey}::uuid
     )
     ON CONFLICT (reporter_role, reporter_id, idempotency_key)

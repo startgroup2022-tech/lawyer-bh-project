@@ -6,6 +6,8 @@ import { buildCountryTableSet } from "@/lib/db/country-tables";
 import { mapCountryProductAccessError, requireCountryProduct } from "@/lib/countries/product-access";
 import { hashConsentText } from "@/lib/sos/consentText";
 import { renderSosConsentPdf } from "@/lib/sos/pdfRenderer";
+import { toSqlTimestamp } from "@/lib/db/sql-timestamp";
+import { toSqlJson } from "@/lib/db/sql-json";
 import { ServerClient } from "postmark";
 import type { SosCaseSlug } from "@/lib/sos/caseTypes";
 
@@ -119,7 +121,7 @@ export async function POST(req: Request) {
     ) VALUES (
       ${country.code}, ${body.fullName.trim()}, ${"cpr"},
       ${body.registrationNo.trim()}, ${"advocate"}, ${body.signatureDataUrl},
-      ${contractTextHash}, ${body.locale}, ${ipAddress}, ${userAgent}, ${now}
+      ${contractTextHash}, ${body.locale}, ${ipAddress}, ${userAgent}, ${toSqlTimestamp(now)}::timestamptz
     )
     RETURNING id
   `;
@@ -152,16 +154,18 @@ export async function POST(req: Request) {
   //    against the Roll of Practising Lawyers.
   await sqlClient`
     INSERT INTO ${sqlClient(countryTables.lawyers)} (
-      country_code, full_name_ar, full_name_en, registration_no, phone, email,
+      country_code, full_name, full_name_ar, full_name_en, registration_no,
+      phone, email,
       is_emergency_ready, emergency_radius_km, emergency_rates, base_location,
       consent_id, is_active
     ) VALUES (
-      ${country.code}, ${body.fullName.trim()}, ${body.fullName.trim()},
+      ${country.code}, ${body.fullName.trim()},
+      ${body.fullName.trim()}, ${body.fullName.trim()},
       ${body.registrationNo.trim()}, ${body.phone.trim()},
       ${body.email.trim().toLowerCase()}, ${false},
       ${body.emergencyRadiusKm},
-      ${Object.keys(cleanRates).length > 0 ? sqlClient.json(cleanRates) : null},
-      ${sqlClient.json(body.baseLocation)}, ${consent.id}, ${true}
+      ${Object.keys(cleanRates).length > 0 ? toSqlJson(cleanRates) : null},
+      ${toSqlJson(body.baseLocation)}, ${consent.id}, ${true}
     )
   `;
 

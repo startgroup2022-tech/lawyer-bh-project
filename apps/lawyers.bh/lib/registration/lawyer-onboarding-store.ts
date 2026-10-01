@@ -6,6 +6,7 @@ import {
   getActiveCountry,
   type ActiveCountry,
 } from "@/lib/db/country-tables";
+import { toSqlTimestamp } from "@/lib/db/sql-timestamp";
 
 import type {
   LawyerOnboardingLocale,
@@ -122,22 +123,24 @@ export async function incrementLawyerOnboardingRateLimit(
   windowMs: number,
 ) {
   const cutoff = new Date(now.getTime() - windowMs);
+  const nowSql = toSqlTimestamp(now);
+  const cutoffSql = toSqlTimestamp(cutoff);
   const rows = await sqlClient<{ count: number }[]>`
     INSERT INTO legalsos_lawyer_onboarding_rate_limits
       (bucket, window_started_at, count, updated_at)
-    VALUES (${bucket}, ${now}, 1, ${now})
+    VALUES (${bucket}, ${nowSql}::timestamptz, 1, ${nowSql}::timestamptz)
     ON CONFLICT (bucket) DO UPDATE SET
       window_started_at = CASE
-        WHEN legalsos_lawyer_onboarding_rate_limits.window_started_at <= ${cutoff}
-          THEN ${now}
+        WHEN legalsos_lawyer_onboarding_rate_limits.window_started_at <= ${cutoffSql}::timestamptz
+          THEN ${nowSql}::timestamptz
         ELSE legalsos_lawyer_onboarding_rate_limits.window_started_at
       END,
       count = CASE
-        WHEN legalsos_lawyer_onboarding_rate_limits.window_started_at <= ${cutoff}
+        WHEN legalsos_lawyer_onboarding_rate_limits.window_started_at <= ${cutoffSql}::timestamptz
           THEN 1
         ELSE legalsos_lawyer_onboarding_rate_limits.count + 1
       END,
-      updated_at = ${now}
+      updated_at = ${nowSql}::timestamptz
     RETURNING count
   `;
 
@@ -147,7 +150,7 @@ export async function incrementLawyerOnboardingRateLimit(
 export async function pruneLawyerOnboardingRateLimits(before: Date) {
   await sqlClient`
     DELETE FROM legalsos_lawyer_onboarding_rate_limits
-    WHERE updated_at < ${before}
+    WHERE updated_at < ${toSqlTimestamp(before)}::timestamptz
   `;
 }
 
