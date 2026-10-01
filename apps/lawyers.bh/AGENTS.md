@@ -87,3 +87,21 @@ cannot save secrets and the `TAP_*` variables stay the source of truth).
 - UI: `/admin/tap-payments` (`page.tsx` + `TapPaymentsContent.tsx`), registered
   as a `superOnly` dashboard card. It only ever sees masked secrets.
 
+# Raw sqlClient values must be pre-serialized
+
+`drizzle-orm/postgres-js` reconfigures the postgres-js client it wraps,
+replacing the `date`/`json` serializers (and the matching parsers) with
+identity functions. As a result, in any module that imports `db` (which is
+everything that imports `@/lib/db/client`), a raw `sqlClient` template that
+binds a `Date` or calls `sqlClient.json(value)` throws
+`ERR_INVALID_ARG_TYPE` before the query reaches PostgreSQL — a runtime 500,
+not a compile error.
+
+- Bind timestamps through `toSqlTimestamp(date)` plus an explicit
+  `::timestamptz` cast (`lib/db/sql-timestamp.ts`).
+- Bind JSON through `toSqlJson(value)` (`lib/db/sql-json.ts`); PostgreSQL
+  parses the string into `json`/`jsonb` columns.
+- This also means raw `sqlClient` reads of timestamp columns return strings,
+  not `Date` objects — wrap with `new Date(row.col)` when a `Date` is needed.
+- Drizzle query-builder paths (`db.select`/`db.update`) are unaffected.
+
