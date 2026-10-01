@@ -325,4 +325,50 @@ describe.skipIf(!localUrl)("appointment lifecycle end to end", () => {
       SELECT status FROM bahrain_appointment_slots WHERE booking_request_id=${id}`;
     expect(slot.status).toBe("booked");
   });
+
+  it("lists a recipient's notifications and marks them read", async () => {
+    const { listAppointmentNotifications, markAppointmentNotificationsRead } = await import(
+      "./notification-store"
+    );
+
+    const clientPage = await listAppointmentNotifications({
+      recipientRole: "client",
+      recipientId: clientId,
+      filter: "all",
+    });
+    // The client owns the seeded booking and the two notifications from the
+    // cancelled appointment above; it never sees the lawyer's rows.
+    expect(clientPage.items.length).toBeGreaterThan(0);
+    expect(clientPage.unreadCount).toBeGreaterThan(0);
+    expect(clientPage.items.every((item) => item.kind !== undefined)).toBe(true);
+
+    const lawyerPage = await listAppointmentNotifications({
+      recipientRole: "lawyer",
+      recipientId: lawyerId,
+      filter: "all",
+    });
+    const lawyerIds = new Set(lawyerPage.items.map((item) => item.id));
+    expect(clientPage.items.some((item) => lawyerIds.has(item.id))).toBe(false);
+
+    const unreadBefore = await listAppointmentNotifications({
+      recipientRole: "client",
+      recipientId: clientId,
+      filter: "unread",
+    });
+    expect(unreadBefore.items.length).toBe(unreadBefore.unreadCount);
+
+    const updated = await markAppointmentNotificationsRead({
+      recipientRole: "client",
+      recipientId: clientId,
+      readThrough: clientPage.snapshotAt,
+    });
+    expect(updated).toBe(unreadBefore.items.length);
+
+    const unreadAfter = await listAppointmentNotifications({
+      recipientRole: "client",
+      recipientId: clientId,
+      filter: "unread",
+    });
+    expect(unreadAfter.unreadCount).toBe(0);
+  });
 });
