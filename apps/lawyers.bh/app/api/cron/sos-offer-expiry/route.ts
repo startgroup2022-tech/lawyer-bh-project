@@ -6,6 +6,7 @@ import { expireLawyerOffers } from "@/lib/sos/offer-expiry";
 import { offerExpiryDependencies } from "@/lib/sos/offer-expiry-runtime";
 import { runAdminEscalationPush } from "@/lib/mobile-admin/escalation-push-runtime";
 import { runPaidRequestAdminNotifications } from "@/lib/mobile-admin/paid-request-notification-runtime";
+import { runAppointmentSchedule } from "@/lib/appointment-communications/schedule-runtime";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -34,8 +35,10 @@ export async function GET(request: Request) {
     .catch(() => ({ error: "unavailable" as const }));
   const paidAdminNotifications = await runPaidRequestAdminNotifications({ now: new Date(), limit: 50 })
     .catch(() => ({ error: "unavailable" as const }));
+  const appointmentSchedule = await runAppointmentSchedule(new Date(), 50)
+    .catch(() => ({ error: "unavailable" as const }));
   if (!result) {
-    return NextResponse.json({ ok: false, error: "offer_expiry_failed", adminPush, paidAdminNotifications }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "offer_expiry_failed", adminPush, paidAdminNotifications, appointmentSchedule }, { status: 500 });
   }
-  return NextResponse.json({ ok: true, ...result, adminPush, paidAdminNotifications });
+  return NextResponse.json({ ok: true, ...result, adminPush, paidAdminNotifications, appointmentSchedule });
 }

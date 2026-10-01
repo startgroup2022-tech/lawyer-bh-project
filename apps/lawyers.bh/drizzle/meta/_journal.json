@@ -667,6 +667,8 @@
     {"idx":128,"version":"7","when":1791072700000,"tag":"0128_saraya_applicant_document_idempotency","breakpoints":true},
     {"idx":129,"version":"7","when":1791072800000,"tag":"0129_mobile_appearance_settings","breakpoints":true},
     {"idx":130,"version":"7","when":1791072900000,"tag":"0130_lawyer_availability_appointments","breakpoints":true},
-    {"idx":131,"version":"7","when":1791073000000,"tag":"0131_tap_gateway_settings","breakpoints":true}
+    {"idx":131,"version":"7","when":1791073000000,"tag":"0131_tap_gateway_settings","breakpoints":true},
+    {"idx":132,"version":"7","when":1791073100000,"tag":"0132_appointment_communications","breakpoints":true},
+    {"idx":133,"version":"7","when":1791073200000,"tag":"0133_appointment_notifications","breakpoints":true}
   ]
 }

@@ -1,4 +1,5 @@
 import { decodeClientEvent } from "./events";
+import type { ClientCommunicationEvent } from "./events";
 import type { BridgedCommunicationEvent } from "./postgres-event-bridge";
 
 export type CommunicationSocket = {
@@ -206,7 +207,7 @@ input.socket.on("error", (...args: unknown[]) => {
         //
         // Decode incoming communication event
         //
-        let event;
+        let event: ClientCommunicationEvent;
 
         try {
           event = decodeClientEvent(frame);

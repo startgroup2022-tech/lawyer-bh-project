@@ -2060,6 +2060,11 @@ export const bookingRequests = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
+
+    startedAt: timestamp("started_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
+    reminderOptIn: boolean("reminder_opt_in").default(true).notNull(),
   },
   (t) => [
     index("booking_requests_assigned_to_email_idx").on(t.assignedToEmail),
@@ -2753,6 +2758,300 @@ export const appointmentSlots = pgTable(
       "appointment_slots_time_check",
       sql`${t.startTime} < ${t.endTime}`,
     ),
+  ],
+);
+
+/**
+ * Normal appointment conversation between a client and the lawyer they booked.
+ * Distinct from the SOS `bahrain_communication_*` tables so authorization and
+ * business context never mix: these rows are keyed by booking request, not by
+ * emergency request.
+ */
+export const appointmentConversations = pgTable(
+  "bahrain_appointment_conversations",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    countryCode: varchar("country_code", { length: 2 }).default("BH").notNull(),
+    bookingRequestId: uuid("booking_request_id")
+      .notNull()
+      .references(() => bookingRequests.id, { onDelete: "cascade" }),
+    clientAccountId: uuid("client_account_id").references(
+      () => mobileClientAccounts.id,
+      { onDelete: "set null" },
+    ),
+    lawyerId: uuid("lawyer_id").references(() => bahrainLawyers.id, {
+      onDelete: "set null",
+    }),
+    clientLastReadAt: timestamp("client_last_read_at", { withTimezone: true }),
+    lawyerLastReadAt: timestamp("lawyer_last_read_at", { withTimezone: true }),
+    lastMessageAt: timestamp("last_message_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    uniqueIndex("appointment_conversations_booking_uidx").on(t.bookingRequestId),
+    index("appointment_conversations_client_idx").on(t.clientAccountId, t.lastMessageAt),
+    index("appointment_conversations_lawyer_idx").on(t.lawyerId, t.lastMessageAt),
+  ],
+);
+
+export const appointmentMessages = pgTable(
+  "bahrain_appointment_messages",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    conversationId: uuid("conversation_id")
+      .notNull()
+      .references(() => appointmentConversations.id, { onDelete: "cascade" }),
+    senderRole: text("sender_role").$type<"client" | "lawyer">().notNull(),
+    senderId: text("sender_id").notNull(),
+    clientMessageId: uuid("client_message_id").notNull(),
+    body: varchar("body", { length: 4000 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`clock_timestamp()`)
+      .notNull(),
+    readAt: timestamp("read_at", { withTimezone: true }),
+  },
+  (t) => [
+    check(
+      "appointment_messages_sender_role_check",
+      sql`${t.senderRole} in ('client', 'lawyer')`,
+    ),
+    check(
+      "appointment_messages_body_check",
+      sql`char_length(btrim(${t.body})) between 1 and 4000`,
+    ),
+    uniqueIndex("appointment_messages_idempotency_uidx").on(
+      t.conversationId,
+      t.senderRole,
+      t.senderId,
+      t.clientMessageId,
+    ),
+    index("appointment_messages_cursor_idx").on(
+      t.conversationId,
+      t.createdAt.desc(),
+      t.id.desc(),
+    ),
+  ],
+);
+
+export const appointmentCalls = pgTable(
+  "bahrain_appointment_calls",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    conversationId: uuid("conversation_id")
+      .notNull()
+      .references(() => appointmentConversations.id, { onDelete: "cascade" }),
+    initiatorRole: text("initiator_role").$type<"client" | "lawyer">().notNull(),
+    initiatorId: text("initiator_id").notNull(),
+    mediaKind: text("media_kind").$type<"audio" | "video">().notNull(),
+    status: text("status")
+      .$type<
+        | "ringing"
+        | "accepted"
+        | "connected"
+        | "ended"
+        | "rejected"
+        | "missed"
+        | "cancelled"
+        | "failed"
+      >()
+      .default("ringing")
+      .notNull(),
+    ringingAt: timestamp("ringing_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+    connectedAt: timestamp("connected_at", { withTimezone: true }),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
+    durationSeconds: integer("duration_seconds"),
+    endReason: text("end_reason"),
+    endedByRole: text("ended_by_role").$type<"client" | "lawyer">(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    check(
+      "appointment_calls_initiator_role_check",
+      sql`${t.initiatorRole} in ('client', 'lawyer')`,
+    ),
+    check(
+      "appointment_calls_media_kind_check",
+      sql`${t.mediaKind} in ('audio', 'video')`,
+    ),
+    check(
+      "appointment_calls_status_check",
+      sql`${t.status} in ('ringing', 'accepted', 'connected', 'ended', 'rejected', 'missed', 'cancelled', 'failed')`,
+    ),
+    check(
+      "appointment_calls_ended_by_role_check",
+      sql`${t.endedByRole} is null or ${t.endedByRole} in ('client', 'lawyer')`,
+    ),
+    check(
+      "appointment_calls_duration_check",
+      sql`${t.durationSeconds} is null or ${t.durationSeconds} >= 0`,
+    ),
+    uniqueIndex("appointment_calls_one_active_uidx")
+      .on(t.conversationId)
+      .where(sql`${t.status} in ('ringing', 'accepted', 'connected')`),
+    index("appointment_calls_conversation_created_idx").on(
+      t.conversationId,
+      t.createdAt,
+    ),
+  ],
+);
+
+export const appointmentSignalEvents = pgTable(
+  "bahrain_appointment_signal_events",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    conversationId: uuid("conversation_id")
+      .notNull()
+      .references(() => appointmentConversations.id, { onDelete: "cascade" }),
+    senderRole: text("sender_role").$type<"client" | "lawyer">().notNull(),
+    event: jsonb("event").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true })
+      .default(sql`now() + interval '2 minutes'`)
+      .notNull(),
+  },
+  (t) => [
+    check(
+      "appointment_signal_events_sender_role_check",
+      sql`${t.senderRole} in ('client', 'lawyer')`,
+    ),
+    index("appointment_signal_events_expiry_idx").on(t.expiresAt),
+    index("appointment_signal_events_conversation_idx").on(
+      t.conversationId,
+      t.createdAt,
+    ),
+  ],
+);
+
+export const appointmentMeetings = pgTable(
+  "bahrain_appointment_meetings",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    conversationId: uuid("conversation_id")
+      .notNull()
+      .references(() => appointmentConversations.id, { onDelete: "cascade" }),
+    bookingRequestId: uuid("booking_request_id")
+      .notNull()
+      .references(() => bookingRequests.id, { onDelete: "cascade" }),
+    openedByRole: text("opened_by_role").$type<"client" | "lawyer">().notNull(),
+    openedById: text("opened_by_id").notNull(),
+    openedAt: timestamp("opened_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    closedAt: timestamp("closed_at", { withTimezone: true }),
+  },
+  (t) => [
+    check(
+      "appointment_meetings_opened_by_role_check",
+      sql`${t.openedByRole} in ('client', 'lawyer')`,
+    ),
+    index("appointment_meetings_conversation_idx").on(t.conversationId, t.openedAt),
+  ],
+);
+
+export const appointmentReminderOutbox = pgTable(
+  "bahrain_appointment_reminder_outbox",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    bookingRequestId: uuid("booking_request_id")
+      .notNull()
+      .references(() => bookingRequests.id, { onDelete: "cascade" }),
+    countryCode: varchar("country_code", { length: 2 }).default("BH").notNull(),
+    reminderKind: text("reminder_kind")
+      .$type<"reminder_24h" | "reminder_1h" | "reminder_15m" | "starting">()
+      .notNull(),
+    dueAt: timestamp("due_at", { withTimezone: true }).notNull(),
+    status: text("status")
+      .$type<"pending" | "leased" | "sent" | "skipped" | "cancelled" | "failed">()
+      .default("pending")
+      .notNull(),
+    attemptCount: integer("attempt_count").default(0).notNull(),
+    claimedAt: timestamp("claimed_at", { withTimezone: true }),
+    leaseExpiresAt: timestamp("lease_expires_at", { withTimezone: true }),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    lastError: text("last_error"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    check(
+      "appointment_reminder_kind_check",
+      sql`${t.reminderKind} in ('reminder_24h', 'reminder_1h', 'reminder_15m', 'starting')`,
+    ),
+    check(
+      "appointment_reminder_status_check",
+      sql`${t.status} in ('pending', 'leased', 'sent', 'skipped', 'cancelled', 'failed')`,
+    ),
+    check("appointment_reminder_attempts_check", sql`${t.attemptCount} >= 0`),
+    uniqueIndex("appointment_reminder_booking_kind_uidx").on(
+      t.bookingRequestId,
+      t.reminderKind,
+    ),
+    index("appointment_reminder_due_idx").on(t.status, t.dueAt),
+  ],
+);
+
+/**
+ * Persisted notification center rows for the normal appointment flow. Separate
+ * from the SOS inboxes because authorization is by client/lawyer session, not
+ * by an SOS request capability.
+ */
+export const appointmentNotifications = pgTable(
+  "bahrain_appointment_notifications",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    bookingRequestId: uuid("booking_request_id")
+      .notNull()
+      .references(() => bookingRequests.id, { onDelete: "cascade" }),
+    conversationId: uuid("conversation_id").references(() => appointmentConversations.id, {
+      onDelete: "cascade",
+    }),
+    recipientRole: text("recipient_role").$type<"client" | "lawyer">().notNull(),
+    recipientId: uuid("recipient_id").notNull(),
+    kind: text("kind").notNull(),
+    entityId: text("entity_id"),
+    deepLink: text("deep_link"),
+    titleAr: text("title_ar"),
+    titleEn: text("title_en"),
+    bodyAr: text("body_ar"),
+    bodyEn: text("body_en"),
+    sourceKey: text("source_key"),
+    readAt: timestamp("read_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`clock_timestamp()`)
+      .notNull(),
+  },
+  (t) => [
+    check(
+      "appointment_notifications_recipient_role_check",
+      sql`${t.recipientRole} in ('client', 'lawyer')`,
+    ),
+    uniqueIndex("appointment_notifications_source_key_uidx").on(t.sourceKey),
+    index("appointment_notifications_owner_cursor_idx").on(
+      t.recipientRole,
+      t.recipientId,
+      t.createdAt.desc(),
+      t.id.desc(),
+    ),
+    index("appointment_notifications_booking_idx").on(t.bookingRequestId),
   ],
 );
 

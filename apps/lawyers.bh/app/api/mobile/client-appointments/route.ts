@@ -14,6 +14,9 @@ import {
   bookAppointmentSlot,
   listClientAppointments,
 } from "@/lib/booking/lawyerAvailabilityStore";
+import { ensureAppointmentConversation } from "@/lib/appointment-communications/access";
+import { notifyAppointmentBooked } from "@/lib/appointment-communications/notifications";
+import { scheduleAppointmentReminders } from "@/lib/appointment-communications/reminder-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -232,6 +235,20 @@ export async function POST(request: Request) {
       { ok: false, error: "booking_unavailable" },
       { status: 503, headers: { "Cache-Control": "no-store" } },
     );
+  }
+
+  // The appointment now exists: create its conversation, persist the booking
+  // notifications for both parties and queue the reminders. These are best
+  // effort — a notification failure must not fail the booking itself.
+  try {
+    await ensureAppointmentConversation(bookingId);
+    await notifyAppointmentBooked(bookingId);
+    await scheduleAppointmentReminders(bookingId);
+  } catch (error) {
+    console.error("[mobile/client-appointments] post-booking side effects failed", {
+      bookingId,
+      name: error instanceof Error ? error.name : "UnknownError",
+    });
   }
 
   return NextResponse.json(

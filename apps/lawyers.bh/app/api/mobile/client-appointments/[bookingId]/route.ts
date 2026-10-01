@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { sqlClient } from "@/lib/db/client";
 import { getMobileClient, rejectCrossOrigin, readJsonBody } from "@/lib/booking/mobileClient";
 import { cancelAppointment } from "@/lib/booking/lawyerAvailabilityStore";
+import { notifyAppointmentCancelled } from "@/lib/appointment-communications/notifications";
+import { cancelAppointmentReminders } from "@/lib/appointment-communications/reminder-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -55,6 +57,17 @@ export async function DELETE(request: Request, { params }: Context) {
         { ok: false, error: "not_found" },
         { status: 404, headers: { "Cache-Control": "no-store" } },
       );
+    }
+
+    // Best effort: cancel queued reminders and tell the lawyer.
+    try {
+      await cancelAppointmentReminders(bookingId);
+      await notifyAppointmentCancelled(bookingId, "client");
+    } catch (error) {
+      console.error("[mobile/client-appointments] cancel side effects failed", {
+        bookingId,
+        name: error instanceof Error ? error.name : "UnknownError",
+      });
     }
 
     return NextResponse.json(

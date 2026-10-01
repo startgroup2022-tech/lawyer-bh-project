@@ -1,4 +1,15 @@
-export type CommunicationClientEvent =
+/**
+ * Server-originated only: a chat message was persisted and is being fanned out
+ * to the peer. `decodeClientEvent` never produces this variant, so a client
+ * cannot forge a message frame over the socket.
+ */
+export type CommunicationServerEvent = {
+  type: "message.created";
+  message: { id: string; senderRole: "client" | "lawyer"; body: string; createdAt: string };
+};
+
+/** Events a client is allowed to send over the socket. */
+export type ClientCommunicationEvent =
   | { type: "call.invite"; callId: string; mediaKind: "audio" | "video" }
   | { type: "call.rejected" | "call.cancelled" | "call.ended"; callId: string }
   | { type: "signal.offer" | "signal.answer"; callId: string; sdp: string }
@@ -10,6 +21,8 @@ export type CommunicationClientEvent =
       sdpMLineIndex?: number | null;
     }
   | { type: "ping" };
+
+export type CommunicationClientEvent = ClientCommunicationEvent | CommunicationServerEvent;
 
 const MAX_FRAME_BYTES = 70_000;
 const MAX_SDP_LENGTH = 65_536;
@@ -28,7 +41,7 @@ function exactKeys(
 
 export function decodeClientEvent(
   frame: string,
-): CommunicationClientEvent {
+): ClientCommunicationEvent {
   if (Buffer.byteLength(frame, "utf8") > MAX_FRAME_BYTES) {
     throw new Error("event_too_large");
   }

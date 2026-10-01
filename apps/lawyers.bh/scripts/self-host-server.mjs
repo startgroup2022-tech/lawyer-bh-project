@@ -16,6 +16,7 @@ import next from "next";
 import { WebSocketServer } from "ws";
 
 const SOCKET_PATH = "/api/mobile/communications/ws";
+const APPOINTMENT_SOCKET_PATH = "/api/mobile/appointments/ws";
 
 const hostname = process.env.HOSTNAME || "0.0.0.0";
 const port = Number.parseInt(process.env.PORT || "3000", 10);
@@ -31,9 +32,16 @@ const server = createServer((req, res) => {
 });
 
 const webSocketServer = new WebSocketServer({ noServer: true, maxPayload: 70_000 });
+const appointmentWebSocketServer = new WebSocketServer({ noServer: true, maxPayload: 70_000 });
 
 function onUpgrade(req, socket, head) {
   const pathname = (req.url || "").split("?")[0];
+  if (pathname === APPOINTMENT_SOCKET_PATH) {
+    appointmentWebSocketServer.handleUpgrade(req, socket, head, (ws) => {
+      appointmentWebSocketServer.emit("connection", ws, req);
+    });
+    return;
+  }
   if (pathname !== SOCKET_PATH) {
     // Not ours (Next HMR in dev, or an unknown path).
     socket.destroy();
@@ -63,6 +71,18 @@ webSocketServer.on("connection", async (ws) => {
     attachCommunicationRuntimeSocket(ws);
   } catch (error) {
     console.error("communication_socket_attach_failed", {
+      error: error instanceof Error ? error.message : "unknown_error",
+    });
+    ws.close(1011, "socket_unavailable");
+  }
+});
+
+appointmentWebSocketServer.on("connection", async (ws) => {
+  const { attachAppointmentRuntimeSocket } = await import("./build/self-host/appointment-socket-runtime.mjs");
+  try {
+    attachAppointmentRuntimeSocket(ws);
+  } catch (error) {
+    console.error("appointment_socket_attach_failed", {
       error: error instanceof Error ? error.message : "unknown_error",
     });
     ws.close(1011, "socket_unavailable");

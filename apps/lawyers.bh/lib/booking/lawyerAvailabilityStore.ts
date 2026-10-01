@@ -440,6 +440,9 @@ export async function loadAppointment(
 
 export type CancelResult = "cancelled" | "not_found" | "not_allowed";
 
+/** The party that cancelled, for notification targeting. */
+export type CancelActor = "client" | "lawyer";
+
 /**
  * Cancels an appointment. Only the owning client (`clientAccountId`) or the
  * booked lawyer (`lawyerId`) may cancel, and only while the booking is still
@@ -477,6 +480,7 @@ export async function cancelAppointment(
     await tx`
       UPDATE public.bahrain_booking_requests
       SET admin_status = 'cancelled',
+          cancelled_at = COALESCE(cancelled_at, now()),
           request_payload = COALESCE(request_payload, '{}'::jsonb) || ${payload}::jsonb,
           updated_at = now()
       WHERE id = ${input.bookingId}::uuid

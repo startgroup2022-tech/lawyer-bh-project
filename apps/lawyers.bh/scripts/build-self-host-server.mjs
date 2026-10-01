@@ -35,14 +35,16 @@ const stubServerOnly = {
 
 const alias = { "@": "." };
 const runtimeSpecifier = "./build/self-host/socket-runtime.mjs";
+const appointmentRuntimeSpecifier = "./build/self-host/appointment-socket-runtime.mjs";
 const shared = {
   bundle: true,
   platform: "node",
   format: "esm",
   target: "node20",
-  // `next` and `ws` are real runtime packages; the socket runtime is emitted as
-  // its own file and resolved dynamically at runtime, so keep it external too.
-  external: ["next", "ws", runtimeSpecifier],
+  // `next` and `ws` are real runtime packages; the socket runtimes are emitted
+  // as their own files and resolved dynamically at runtime, so keep them
+  // external too.
+  external: ["next", "ws", runtimeSpecifier, appointmentRuntimeSpecifier],
   alias,
   plugins: [stubServerOnly],
   logLevel: "info",
@@ -58,4 +60,10 @@ await build({
   ...shared,
   entryPoints: ["lib/communications/socket-runtime.ts"],
   outfile: "build/self-host/socket-runtime.mjs",
+});
+
+await build({
+  ...shared,
+  entryPoints: ["lib/appointment-communications/socket-runtime.ts"],
+  outfile: "build/self-host/appointment-socket-runtime.mjs",
 });

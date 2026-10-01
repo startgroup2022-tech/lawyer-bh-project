@@ -2,6 +2,8 @@ import { sqlClient } from "@/lib/db/client";
 import { getMobileLawyerSession } from "@/lib/mobile-lawyer-auth";
 import { lawyerJson, readLawyerJson, rejectCrossOrigin } from "@/lib/booking/mobileLawyerHttp";
 import { cancelAppointment } from "@/lib/booking/lawyerAvailabilityStore";
+import { notifyAppointmentCancelled } from "@/lib/appointment-communications/notifications";
+import { cancelAppointmentReminders } from "@/lib/appointment-communications/reminder-store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -42,6 +44,17 @@ export async function DELETE(request: Request, { params }: Context) {
     if (result === "not_found" || result === "not_allowed") {
       return lawyerJson({ ok: false, error: "not_found" }, 404);
     }
+
+    try {
+      await cancelAppointmentReminders(bookingId);
+      await notifyAppointmentCancelled(bookingId, "lawyer");
+    } catch (error) {
+      console.error("[mobile/lawyer/appointments] cancel side effects failed", {
+        bookingId,
+        name: error instanceof Error ? error.name : "UnknownError",
+      });
+    }
+
     return lawyerJson({ ok: true, status: "cancelled" });
   } catch (error) {
     console.error("[mobile/lawyer/appointments] cancel failed", error);
