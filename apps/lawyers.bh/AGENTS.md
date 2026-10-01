@@ -79,6 +79,11 @@ cannot save secrets and the `TAP_*` variables stay the source of truth).
 - Stored credentials are hydrated into the existing synchronous Tap accessors
   (`lib/tap/config.ts`) at boot via `instrumentation.ts` and after every save,
   so all current callers are unchanged and the environment remains the fallback.
+  The hydrated override is kept on `globalThis` (a `Symbol.for` key), not in a
+  module-level binding: the instrumentation hook and the route handlers are
+  bundled into different chunks, and a module-level binding would leave each
+  chunk with its own empty copy, so admin-managed credentials would silently
+  never take effect in a production build.
 - UI: `/admin/tap-payments` (`page.tsx` + `TapPaymentsContent.tsx`), registered
   as a `superOnly` dashboard card. It only ever sees masked secrets.
 

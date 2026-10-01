@@ -46,6 +46,7 @@ export async function createReviewLawyerAccount({
     registrationNo: normalizedRegistrationNo,
     membershipNo: normalizedMembershipNo,
     phone: normalizedPhone,
+    fullName: normalizedFullNameAr || normalizedFullNameEn,
     fullNameAr: normalizedFullNameAr,
     fullNameEn: normalizedFullNameEn,
     status: "approved",
@@ -157,6 +158,7 @@ async function main() {
             const rows = await transactionSql`
               INSERT INTO public.bahrain_lawyers (
                 country_code,
+                full_name,
                 full_name_ar,
                 full_name_en,
                 registration_no,
@@ -171,6 +173,7 @@ async function main() {
                 is_review_account
               ) VALUES (
                 ${account.countryCode},
+                ${account.fullName},
                 ${account.fullNameAr},
                 ${account.fullNameEn},
                 ${account.registrationNo},

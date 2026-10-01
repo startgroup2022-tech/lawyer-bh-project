@@ -60,3 +60,18 @@ describe("tap config hydration", () => {
     expect(getTapConfig).toBeTypeOf("function");
   });
 });
+
+describe("tap config override across module instances", () => {
+  it("survives separate module instances, as production bundling produces", async () => {
+    // The instrumentation hook and the route handlers can end up in different
+    // chunks, each with its own copy of this module. The override must be shared
+    // process-wide or admin-managed credentials silently never take effect.
+    vi.resetModules();
+    const writer = await import("./config");
+    writer.setTapConfigOverride(DB_CONFIG);
+    vi.resetModules();
+    const reader = await import("./config");
+    expect(reader.getTapConfig()).toEqual(DB_CONFIG);
+    reader.setTapConfigOverride(null);
+  });
+});

@@ -71,6 +71,7 @@ describe("review lawyer account creation", () => {
       registrationNo: "APP-REVIEW-001",
       membershipNo: "MEMBER-APP-REVIEW-001",
       phone: "+97300000000",
+      fullName: "حساب مراجعة التطبيق",
       fullNameAr: "حساب مراجعة التطبيق",
       fullNameEn: "App Review Lawyer",
       status: "approved",

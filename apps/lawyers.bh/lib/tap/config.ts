@@ -25,32 +25,45 @@ function required(name: string): string {
  * startup (and after every save) so the synchronous accessors below keep their
  * contract and every existing caller keeps working unchanged. With no override
  * the environment is the source of truth, exactly as before.
+ *
+ * The override is stored on globalThis rather than in a module-level variable:
+ * the bundler can evaluate this module in more than one chunk, and the
+ * instrumentation hook that hydrates it lives in a different chunk from the
+ * route handlers that read it. A module-level binding would leave the routes
+ * looking at an empty copy, so admin-managed credentials would silently never
+ * take effect.
  */
-let override: TapConfig | null = null;
+const OVERRIDE_KEY = Symbol.for("lawyers.bh.tapConfigOverride");
+
+type OverrideStore = { [OVERRIDE_KEY]?: TapConfig | null };
 
 export function setTapConfigOverride(next: TapConfig | null): void {
-  override = next;
+  (globalThis as OverrideStore)[OVERRIDE_KEY] = next;
 }
 
 export function getTapConfigOverride(): TapConfig | null {
-  return override;
+  return (globalThis as OverrideStore)[OVERRIDE_KEY] ?? null;
 }
 
 export function tapSiteUrl(): string {
+  const override = getTapConfigOverride();
   return (override?.siteUrl ?? process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
 }
 
 export function getTapSecretKey(): string {
+  const override = getTapConfigOverride();
   if (override) return override.secretKey;
   return required("TAP_SECRET_KEY");
 }
 
 export function getTapMode(): "test" | "live" {
+  const override = getTapConfigOverride();
   if (override) return override.mode;
   return getTapSecretKey().startsWith("sk_live_") ? "live" : "test";
 }
 
 export function getTapConfig(): TapConfig {
+  const override = getTapConfigOverride();
   if (override) return override;
 
   const secretKey = getTapSecretKey();
